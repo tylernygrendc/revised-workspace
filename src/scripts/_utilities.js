@@ -30,6 +30,7 @@ export function getQueue(){
         if(queue === null) {
             queue = document.createElement("div");
             queue.setAttribute("id", "utility-queue");
+            queue.setAttribute("aria-hidden", "true");
             document.body.append(queue);
         }
     } catch (error) {
