@@ -1,7 +1,10 @@
 {
   "name": "workspace",
   "version": "0.10",
-  "main": "client-script.js",
+  "exports": {
+    "./_*.js": "./src/scripts/_*.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "compile": "node pug.config.js && sass --no-source-map src/styles:dist/styles && rollup --config rollup.config.js",
     "pug": "node pug.config.js",
