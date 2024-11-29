@@ -10,8 +10,8 @@ const existingHTML = readdirSync(outputDirectory);
 console.log(chalk.yellow(`Rendering HTML from "${inputDirectory}"...\n`));
 
 for(const template of templates) {
-    if(template.charAt(0) === "_") {
-        // it's a module, do nothing
+    if(template.charAt(0) === "_" || !template.includes(".pug") ) {
+        // it's a module/folder, do nothing
     } else {
         const html = `${template.split(".")[0]}.html`;
         writeFileSync(`${outputDirectory}/${html}`, 
