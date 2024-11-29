@@ -1,0 +1,168 @@
+@use "sass:color";
+
+@function contrast($color){
+    @if(color.channel($color, "lightness") > 50){
+        @return hsl(color.channel($color, "hue"), 100%, 10%);
+    } @else {
+        @return hsl(0, 0%, 100%);
+    }
+}
+
+// core theme colors
+
+$primary: hsl(84, 100%, 21%);
+$error: hsl(0, 75%, 42%);
+
+// LIGHT palette, adjustments based on hsl(84, 100%, 21%)
+
+$surface-tint: $primary;
+$on-primary: contrast($primary);
+$primary-container: color.adjust($primary, $saturation: -25%, $lightness: 18%);
+$on-primary-container: contrast($primary-container);
+$secondary: color.adjust($primary, $hue: 3deg, $saturation: -58%, $lightness: 7%);
+$on-secondary: contrast($secondary);
+$secondary-container: color.adjust($primary, $hue: 2deg, $saturation: -25%, $lightness: 59%);
+$on-secondary-container: contrast($secondary-container);
+$tertiary: color.adjust($primary, $hue: 80deg);
+$on-tertiary: contrast($tertiary);
+$tertiary-container: color.adjust($primary, $hue: 78deg, $saturation: -44%, $lightness: 21%);
+$on-tertiary-container: contrast($tertiary-container);
+// $error: red;
+$on-error: contrast($error);
+$error-container: color.adjust($error, $hue: 6deg, $saturation: 25%, $lightness: 50%);
+$on-error-container: contrast($error-container);
+$background: color.adjust($primary, $hue: -10deg, $saturation: -32%, $lightness: 74%);
+$on-background: contrast($background);
+$surface: color.adjust($primary, $hue: -10deg, $saturation: -32%, $lightness: -5%);
+$on-surface: contrast($surface);
+$surface-variant: color.adjust($primary, $hue: -5deg, $saturation: -66%, $lightness: 64%);
+$on-surface-variant: contrast($surface-variant);
+$outline: color.adjust($primary, $hue: 3deg, $saturation: -91%, $lightness: 35%);
+$outline-variant: color.adjust($primary, $hue: -4deg, $saturation: -82%, $lightness: 54%);
+$inverse-surface: color.adjust($primary, $hue: -2deg, $saturation: -88%, $lightness: -4%);
+$inverse-on-surface: contrast($inverse-surface);
+$inverse-primary: color.adjust($primary, $hue: 3deg, $saturation: -44%);
+$surface-dim: color.adjust($primary, $hue: -9deg, $saturation: -81%, $lightness: 62%);
+$surface-bright: color.adjust($primary, $hue: -10deg, $saturation: -32%, $lightness: 74%);
+$surface-container-lowest: hsl(0, 0%, 100%);
+$surface-container-low: color.adjust($primary, $hue: -13deg, $saturation: -66%, $lightness: 72%);
+$surface-container: color.adjust($primary, $hue: -9deg, $saturation: -65%, $lightness: 70%);
+$surface-container-high: color.adjust($primary, $hue: -9deg, $saturation: -72%, $lightness: 68%);
+$surface-container-highest: color.adjust($primary, $hue: -9deg, $saturation: -77%, $lightness: 65%);
+
+// DARK palette, adjustments based on hsl(84, 100%, 21%)
+
+$primary--dark: color.adjust($primary, $hue: 3deg, $saturation: -34%, $lightness: 35%);
+$surface-tint--dark: $primary--dark;
+$on-primary--dark: contrast($primary--dark);
+$primary-container--dark: color.adjust($primary, $lightness: 4%);
+$on-primary-container--dark: contrast($primary-container--dark);
+$secondary--dark: color.adjust($primary, $hue: 2deg, $saturation: -56%, $lightness: 47%);
+$on-secondary--dark: contrast($secondary--dark);
+$secondary-container--dark: color.adjust($primary, $hue: 3deg, $saturation: -29%, $lightness: -5%);
+$on-secondary-container--dark: contrast($secondary-container--dark);
+$tertiary--dark: color.adjust($primary, $hue: 75deg, $saturation: -36%, $lightness: 40%);
+$on-tertiary--dark: contrast($tertiary--dark);
+$tertiary-container--dark: color.adjust($primary, $hue: 81deg, $lightness: 5%);
+$on-tertiary-container--dark: contrast($tertiary-container--dark);
+$error--dark: color.adjust($error, $hue: 6deg, $saturation: 25%, $lightness: 42%);
+$on-error--dark: contrast($error--dark);
+$error-container--dark: color.adjust($error--dark, $hue: -11deg, $lightness: -55%);
+$on-error-container--dark: contrast($error-container--dark);
+$background--dark: color.adjust($primary, $saturation: -69%, $lightness: -15%);
+$on-background--dark: contrast($background--dark);
+$surface--dark: color.adjust($primary, $saturation: -69%, $lightness: -15%);
+$on-surface--dark: contrast($surface--dark);
+$surface-variant--dark: color.adjust($primary, $hue: -1deg, $saturation: -86%, $lightness: 4%);
+$on-surface-variant--dark: contrast($surface-variant--dark);
+$outline--dark: color.adjust($primary, $hue: -2deg, $saturation: -91%, $lightness: 33%);
+$outline-variant--dark: color.adjust($primary, $hue: -1deg, $saturation: -86%, $lightness: 4%);
+$inverse-surface--dark: color.adjust($primary, $hue: -9deg, $saturation: -77%, $lightness: 65%);
+$inverse-on-surface--dark: contrast($inverse-surface--dark);
+$inverse-primary--dark: $primary;
+$surface-dim--dark: color.adjust($primary, $saturation: -69%, $lightness: -15%);
+$surface-bright--dark: color.adjust($primary, $hue: 1deg, $saturation: -89%);
+$surface-container-lowest--dark: color.adjust($primary, $hue: 6deg, $saturation: -64%, $lightness: -17%);
+$surface-container-low--dark: color.adjust($primary, $saturation: -79%, $lightness: -12%);
+$surface-container--dark: color.adjust($primary, $saturation: -82%, $lightness: -10%);
+$surface-container-high--dark: color.adjust($primary, $saturation: -87%, $lightness: -6%);
+$surface-container-highest--dark: color.adjust($primary, $hue: -2deg, $saturation: -89%, $lightness: -2%);
+
+:root{
+    --md-sys-color-primary: #{$primary};
+    --md-sys-color-surface-tint: #{$surface-tint};
+    --md-sys-color-on-primary: #{$on-primary};
+    --md-sys-color-primary-container: #{$primary-container};
+    --md-sys-color-on-primary-container: #{$on-primary-container};
+    --md-sys-color-secondary: #{$secondary};
+    --md-sys-color-on-secondary: #{$on-secondary};
+    --md-sys-color-secondary-container: #{$secondary-container};
+    --md-sys-color-on-secondary-container: #{$on-secondary-container};
+    --md-sys-color-tertiary: #{$tertiary};
+    --md-sys-color-on-tertiary: #{$on-tertiary};
+    --md-sys-color-tertiary-container: #{$tertiary-container};
+    --md-sys-color-on-tertiary-container: #{$on-tertiary-container};
+    --md-sys-color-error: #{$error};
+    --md-sys-color-on-error: #{$on-error};
+    --md-sys-color-error-container: #{$error-container};
+    --md-sys-color-on-error-container: #{$on-error-container};
+    --md-sys-color-background: #{$background};
+    --md-sys-color-on-background: #{$on-background};
+    --md-sys-color-surface: #{$surface};
+    --md-sys-color-on-surface: #{$on-surface};
+    --md-sys-color-surface-variant: #{$surface-variant};
+    --md-sys-color-on-surface-variant: #{$on-surface-variant};
+    --md-sys-color-outline: #{$outline};
+    --md-sys-color-outline-variant: #{$outline-variant};
+    --md-sys-color-inverse-surface: #{$inverse-surface};
+    --md-sys-color-inverse-on-surface: #{$inverse-on-surface};
+    --md-sys-color-inverse-primary: #{$inverse-primary};
+    --md-sys-color-surface-dim: #{$surface-dim};
+    --md-sys-color-surface-bright: #{$surface-bright};
+    --md-sys-color-surface-container-lowest: #{$surface-container-lowest};
+    --md-sys-color-surface-container-low: #{$surface-container-low};
+    --md-sys-color-surface-container: #{$surface-container};
+    --md-sys-color-surface-container-high: #{$surface-container-high};
+    --md-sys-color-surface-container-highest: #{$surface-container-highest};
+}
+      
+@media (prefers-color-scheme: dark){
+    :root{
+        --md-sys-color-primary: #{$primary--dark};
+        --md-sys-color-surface-tint: #{$surface-tint--dark};
+        --md-sys-color-on-primary: #{$on-primary--dark};
+        --md-sys-color-primary-container: #{$primary-container--dark};
+        --md-sys-color-on-primary-container: #{$on-primary-container--dark};
+        --md-sys-color-secondary: #{$secondary--dark};
+        --md-sys-color-on-secondary: #{$on-secondary--dark};
+        --md-sys-color-secondary-container: #{$secondary-container--dark};
+        --md-sys-color-on-secondary-container: #{$on-secondary-container--dark};
+        --md-sys-color-tertiary: #{$tertiary--dark};
+        --md-sys-color-on-tertiary: #{$on-tertiary--dark};
+        --md-sys-color-tertiary-container: #{$tertiary-container--dark};
+        --md-sys-color-on-tertiary-container: #{$on-tertiary-container--dark};
+        --md-sys-color-error: #{$error--dark};
+        --md-sys-color-on-error: #{$on-error--dark};
+        --md-sys-color-error-container: #{$error-container--dark};
+        --md-sys-color-on-error-container: #{$on-error-container--dark};
+        --md-sys-color-background: #{$background--dark};
+        --md-sys-color-on-background: #{$on-background--dark};
+        --md-sys-color-surface: #{$surface--dark};
+        --md-sys-color-on-surface: #{$on-surface--dark};
+        --md-sys-color-surface-variant: #{$surface-variant--dark};
+        --md-sys-color-on-surface-variant: #{$on-surface-variant--dark};
+        --md-sys-color-outline: #{$outline--dark};
+        --md-sys-color-outline-variant: #{$outline-variant--dark};
+        --md-sys-color-inverse-surface: #{$inverse-surface--dark};
+        --md-sys-color-inverse-on-surface: #{$inverse-on-surface--dark};
+        --md-sys-color-inverse-primary: #{$inverse-primary--dark};
+        --md-sys-color-surface-dim: #{$surface-dim--dark};
+        --md-sys-color-surface-bright: #{$surface-bright--dark};
+        --md-sys-color-surface-container-lowest: #{$surface-container-lowest--dark};
+        --md-sys-color-surface-container-low: #{$surface-container-low--dark};
+        --md-sys-color-surface-container: #{$surface-container--dark};
+        --md-sys-color-surface-container-high: #{$surface-container-high--dark};
+        --md-sys-color-surface-container-highest: #{$surface-container-highest--dark};
+    }
+}
+    

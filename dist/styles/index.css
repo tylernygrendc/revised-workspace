@@ -1,0 +1,77 @@
+:root {
+  --md-sys-color-primary: hsl(84, 100%, 21%);
+  --md-sys-color-surface-tint: hsl(84, 100%, 21%);
+  --md-sys-color-on-primary: hsl(0, 0%, 100%);
+  --md-sys-color-primary-container: hsl(84, 75%, 39%);
+  --md-sys-color-on-primary-container: hsl(0, 0%, 100%);
+  --md-sys-color-secondary: hsl(87, 42%, 28%);
+  --md-sys-color-on-secondary: hsl(0, 0%, 100%);
+  --md-sys-color-secondary-container: hsl(86, 75%, 80%);
+  --md-sys-color-on-secondary-container: hsl(86, 100%, 10%);
+  --md-sys-color-tertiary: hsl(164, 100%, 21%);
+  --md-sys-color-on-tertiary: hsl(0, 0%, 100%);
+  --md-sys-color-tertiary-container: hsl(162, 56%, 42%);
+  --md-sys-color-on-tertiary-container: hsl(0, 0%, 100%);
+  --md-sys-color-error: hsl(0, 75%, 42%);
+  --md-sys-color-on-error: hsl(0, 0%, 100%);
+  --md-sys-color-error-container: hsl(6, 100%, 92%);
+  --md-sys-color-on-error-container: hsl(6, 100%, 10%);
+  --md-sys-color-background: hsl(74, 68%, 95%);
+  --md-sys-color-on-background: hsl(74, 100%, 10%);
+  --md-sys-color-surface: hsl(74, 68%, 16%);
+  --md-sys-color-on-surface: hsl(0, 0%, 100%);
+  --md-sys-color-surface-variant: hsl(79, 34%, 85%);
+  --md-sys-color-on-surface-variant: hsl(79, 100%, 10%);
+  --md-sys-color-outline: hsl(87, 9%, 56%);
+  --md-sys-color-outline-variant: hsl(80, 18%, 75%);
+  --md-sys-color-inverse-surface: hsl(82, 12%, 17%);
+  --md-sys-color-inverse-on-surface: hsl(0, 0%, 100%);
+  --md-sys-color-inverse-primary: hsl(87, 56%, 21%);
+  --md-sys-color-surface-dim: hsl(75, 19%, 83%);
+  --md-sys-color-surface-bright: hsl(74, 68%, 95%);
+  --md-sys-color-surface-container-lowest: hsl(0, 0%, 100%);
+  --md-sys-color-surface-container-low: hsl(71, 34%, 93%);
+  --md-sys-color-surface-container: hsl(75, 35%, 91%);
+  --md-sys-color-surface-container-high: hsl(75, 28%, 89%);
+  --md-sys-color-surface-container-highest: hsl(75, 23%, 86%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: hsl(87, 66%, 56%);
+    --md-sys-color-surface-tint: hsl(87, 66%, 56%);
+    --md-sys-color-on-primary: hsl(87, 100%, 10%);
+    --md-sys-color-primary-container: hsl(84, 100%, 25%);
+    --md-sys-color-on-primary-container: hsl(0, 0%, 100%);
+    --md-sys-color-secondary: hsl(86, 44%, 68%);
+    --md-sys-color-on-secondary: hsl(86, 100%, 10%);
+    --md-sys-color-secondary-container: hsl(87, 71%, 16%);
+    --md-sys-color-on-secondary-container: hsl(0, 0%, 100%);
+    --md-sys-color-tertiary: hsl(159, 64%, 61%);
+    --md-sys-color-on-tertiary: hsl(159, 100%, 10%);
+    --md-sys-color-tertiary-container: hsl(165, 100%, 26%);
+    --md-sys-color-on-tertiary-container: hsl(0, 0%, 100%);
+    --md-sys-color-error: hsl(6, 100%, 84%);
+    --md-sys-color-on-error: hsl(6, 100%, 10%);
+    --md-sys-color-error-container: hsl(355, 100%, 29%);
+    --md-sys-color-on-error-container: hsl(0, 0%, 100%);
+    --md-sys-color-background: hsl(84, 31%, 6%);
+    --md-sys-color-on-background: hsl(0, 0%, 100%);
+    --md-sys-color-surface: hsl(84, 31%, 6%);
+    --md-sys-color-on-surface: hsl(0, 0%, 100%);
+    --md-sys-color-surface-variant: hsl(83, 14%, 25%);
+    --md-sys-color-on-surface-variant: hsl(0, 0%, 100%);
+    --md-sys-color-outline: hsl(82, 9%, 54%);
+    --md-sys-color-outline-variant: hsl(83, 14%, 25%);
+    --md-sys-color-inverse-surface: hsl(75, 23%, 86%);
+    --md-sys-color-inverse-on-surface: hsl(75, 100%, 10%);
+    --md-sys-color-inverse-primary: hsl(84, 100%, 21%);
+    --md-sys-color-surface-dim: hsl(84, 31%, 6%);
+    --md-sys-color-surface-bright: hsl(85, 11%, 21%);
+    --md-sys-color-surface-container-lowest: hsl(90, 36%, 4%);
+    --md-sys-color-surface-container-low: hsl(84, 21%, 9%);
+    --md-sys-color-surface-container: hsl(84, 18%, 11%);
+    --md-sys-color-surface-container-high: hsl(84, 13%, 15%);
+    --md-sys-color-surface-container-highest: hsl(82, 11%, 19%);
+  }
+}

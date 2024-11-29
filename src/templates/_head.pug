@@ -1,0 +1,26 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{typeof title === "string" ? title : "Untitled"}
+        block description
+            meta(name="description", content="")
+        block meta
+        link(rel="manifest" href="manifest.json")
+        link(rel="icon", href="favicon.ico", sizes="32x32")
+        link(rel="icon", href="./assets/favicon.svg", type="image/svg+xml")
+        link(rel="apple-touch-icon", href="./assets/app-icon.png")
+        link(rel="preload", href="./assets/roboto-flex.ttf", as="font", type="font/ttf", crossorigin)
+        link(rel="preload", href="./assets/material-symbols.woff2", as="font", type="font/woff2", crossorigin)
+        // suspense styles
+        <style></style>
+        block stylesheets
+            link(rel="stylesheet", href=`./styles/${title}.css`)
+
+    body
+        block body
+        // suspense scripts
+        <script></script>
+        block scripts
+            script(src=`./scripts/${title}.min.js`)
