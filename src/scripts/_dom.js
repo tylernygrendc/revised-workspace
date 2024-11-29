@@ -1,6 +1,5 @@
-import { getQueue, getRandomId } from "_utilities.js";
-import { coerce, is, not } from "_type.js";
-
+import { getQueue, getRandomId } from "./_utilities.js";
+import { coerce, is, not } from "./_type.js";
 export class Child {
     constructor(tag = "div"){
         this.tag = coerce.string(tag, "div");
@@ -155,7 +154,6 @@ class Img extends Child {
         return this;
     }
 }
-
 // input
 export class Button extends Child {
     constructor(label="", variant="filled-tonal"){
@@ -334,8 +332,7 @@ export class Select extends Child {
                 .setAttribute(this.attributes)
                 .setClassList(this.classList)
                 .appendTo(select);
-            /* selectOptionText */ new Child("div")
-                .setAttribute({slot: "headline"})
+            /* selectOptionText */ new Child("span")
                 .setInnerText(option)
                 .appendTo(selectOption);
         }
@@ -798,8 +795,30 @@ export class Datepicker extends Child {
     }
 }
 export class Details extends Child{
-    constructor(){
+    constructor(summaryClosed = "", summaryOpen = ""){
         super();
+        this.summaryClosed = summaryClosed;
+        this.summaryOpen = summaryOpen;
+    }
+    build(parent = _.getQueue()){
+        let details = new Child("details")
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent);
+        let summary = new Child("summary")
+            .setInnerText(this.summaryClosed)
+            .appendTo(details)
+            .getNode();
+        if(this.summaryOpen){
+            summary.dataset.summaryClosed = this.summaryClosed;
+            summary.dataset.summaryOpen = this.summaryOpen;
+            summary.addEventListener("click", function () {
+                if(this.parentElement.hasAttribute("open")) this.innerText = this.dataset.summaryClosed;
+                else this.innerText = this.dataset.summaryOpen;
+            });
+        }
+        return this;
     }
 }
 export class Dialog extends Child {
@@ -842,7 +861,7 @@ export class Navigation extends Child {
         super();
     }
 }
-export class Picture extends Child(){
+export class Picture extends Child {
     constructor(){
         super();
     }

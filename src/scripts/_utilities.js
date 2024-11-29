@@ -2,9 +2,9 @@ export function duplicateNode(node) {
     let clone;
     try{
         clone = node.cloneNode(true);
-        clone.id = _.getRandomId();
+        clone.id = getRandomId();
         clone.querySelectorAll("*").forEach(child => {
-            child.id = _.getRandomId();
+            child.id = getRandomId();
         });
     } catch (error) {
         clone = document.createElement("div");
@@ -26,8 +26,12 @@ export function getRandomId(){
 export function getQueue(){
     let queue;
     try{
-        queue = document.querySelector("#extension-queue");
-        if(queue === null) queue = new Child().setId("extension-queue").appendTo(document.body).getNode();
+        queue = document.querySelector("#utility-queue");
+        if(queue === null) {
+            queue = document.createElement("div");
+            queue.setAttribute("id", "utility-queue");
+            document.body.append(queue);
+        }
     } catch (error) {
         console.groupCollapsed(`Could not get #extension-queue.`);
         console.error(error);
