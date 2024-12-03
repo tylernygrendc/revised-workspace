@@ -138,3 +138,9 @@ export const not = {
         else return true;
     }
 }
+
+export default function getType(thing) {
+    for(const [key, f] of Object.entries(is)) {
+        if(f(thing) && !["defined"].includes(key)) return key;
+    }
+}
