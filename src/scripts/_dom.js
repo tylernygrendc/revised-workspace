@@ -163,11 +163,16 @@ export class Button extends Child {
                 "elevated","filled","filled-tonal","outlined","text"
             ].includes(variant) ? variant : "filled-tonal";
     }
-    buildWithin(parent = getQueue()){
-        new Child(`md-${this.variant}-button`)
+    appendTo(parent = getQueue()){
+        let button = new Child(`md-${this.variant}-button`)
             .setId(this.id)
             .setInnerText(this.label)
             .appendTo(parent);
+        if(is.function(this.callback)) button.getNode().addEventListener("click",this.callback());
+        return this;
+    }
+    setCallback(f=function(){}){
+        this.callback = f;
         return this;
     }
     setDisabled(disabled = true){
@@ -230,7 +235,7 @@ export class Checkbox extends Child {
         this.isStandalone = false;
         this.label = label;
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         if(!this.isStandalone){
             new Child("label")
                 .setAttribute({"for": this.id})
@@ -278,7 +283,7 @@ export class Radio extends Child {
         this.isStandalone = false;
         this.label = label;
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         if(!this.isStandalone){
             new Child("label")
                 .setAttribute({"for": this.id})
@@ -324,7 +329,7 @@ export class Select extends Child {
             name: name
         };
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         let select = new Child(`md-${this.variant}-select`)
         for(const option of this.options) {
             let selectOption = new Child(`md-select-option`)
@@ -333,6 +338,7 @@ export class Select extends Child {
                 .setClassList(this.classList)
                 .appendTo(select);
             /* selectOptionText */ new Child("span")
+                .setAttribute({slot: "headline"})
                 .setInnerText(option)
                 .appendTo(selectOption);
         }
@@ -390,7 +396,7 @@ export class Slider extends Child {
         }
         if(showLabel) this.attributes.labeled = true;
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         new Child(`md-slider`)
             .setId(this.id)
             .setAttribute(this.attributes)
@@ -424,7 +430,7 @@ export class Switch extends Child {
         this.label = label;
         this.attributes.name = label;
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         if(!this.isStandalone){
             new Child("label")
                 .setAttribute({"for": this.id})
@@ -476,7 +482,7 @@ export class Textfield extends Child {
             name: label
         };
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         if(this.externalLabel){
             new Child("label")
                 .setAttribute({for: this.id})
@@ -608,7 +614,7 @@ export class Chip extends Child {
         super();
         this.label = label;
     }
-    buildWithin(parent){
+    appendTo(parent){
         if(parent.tagName === "md-chip-set" || parent.tag === "md-chip-set"){
             let chip = new Child(`md-${this.variant}-chip`)
                 .setId(this.id)
@@ -633,7 +639,7 @@ export class Chip extends Child {
             }
             if(is.function(this.callback)){
                 if(this.variant === "assist" || this.variant === "suggestion"){
-                    chip.addEventListener("click", this.callback);
+                    chip.addEventListener("click", this.callback());
                 } else {
                     console.groupCollapsed("Event listener was not added to chip.");
                     console.error("Callback functions can only be set on assist chips and suggestion chips.");
@@ -676,8 +682,8 @@ export class Chip extends Child {
         else delete this.attributes.elevated;
         return this;
     }
-    setIcon(icon = ""){
-        this.icon = icon;
+    setIcon(name = ""){
+        this.icon = name;
         return this;
     }
     setLink(href = "", openInNewWindow = false){
@@ -714,7 +720,7 @@ export class Chipset extends Child {
         super();
         this.chips = chips;
     }
-    buildWithin(parent = getQueue()){
+    appendTo(parent = getQueue()){
         let chipset = new Child(`md-chip-set`)
             .setId(this.id)
             .setAttribute(this.attributes)
@@ -728,19 +734,19 @@ export class Chipset extends Child {
                         new Chip(chip)
                             .setVariant("suggestion")
                             .setCallback(this.callback)
-                            .buildWithin(chipset);
+                            .appendTo(chipset);
                     } else {
                         new Chip(chip)
                             .setVariant("filter")
-                            .buildWithin(chipset);
+                            .appendTo(chipset);
                     }
                 } 
                 if(chip instanceof Chip) {
                     if(is.function(chip.callback) || is.string(chip.attributes.href)){
                         chip.setVariant("assist")
-                            .buildWithin(chipset);
+                            .appendTo(chipset);
                     } else {
-                        chip.buildWithin(chipset); // defaults to <md-chip-input>
+                        chip.appendTo(chipset); // defaults to <md-chip-input>
                     }
                 }
             }
@@ -769,8 +775,8 @@ export class Chipset extends Child {
             return [];
         }
     }
-    onChipClick(callback){
-        this.callback = callback;
+    setCallback(f=function(){}){
+        this.callback = f;
         return this;
     }
 }
@@ -822,13 +828,93 @@ export class Details extends Child{
     }
 }
 export class Dialog extends Child {
-    constructor(){
+    constructor(headline = "", content = [], actions = [], removeOnSubmit=false){
         super();
+        this.actions = coerce.array(this.actions, [this.actions]);
+        this.content = coerce.array(this.content, [this.content]);
+        this.headline = headline;
+        this.open = true;
+        this.removeOnSubmit = removeOnSubmit;
+    }
+    appendTo(parent = document.body){
+        let dialog = new Child("md-dialog")
+            .setAttribute({open:this.open})
+            .appendTo(parent);
+        if(is.function(this.callback) && this.removeOnSubmit){
+            dialog.getNode().addEventListener("close",function(){})
+        } else if(this.removeOnSubmit) { 
+            dialog.getNode().addEventListener("close",function(){this.remove()});
+        }
+        if(this.icon) new Icon(this.icon).appendTo(dialog);
+        new Child("span")
+            .setAttribute({slot: "headline"})
+            .setInnerText(this.headline)
+            .appendTo(dialog);
+        let dialogContent = new Child("form")
+                .setAttribute({slot:"content",method:"dialog"})
+                .appendTo(dialog);
+        for(const block of this.content){
+            if(block instanceof Child) block.appendTo(dialogContent);
+            if(is.string(block)) new Child("div").setInnerText(block).appendTo(dialogContent);
+        }
+        let dialogActions = new Child("form")
+            .setAttribute({slot:"actions"})
+            .appendTo(dialog);
+        for(const action of this.actions){
+            if(action instanceof Button) action.setAttribute({form:this.id}).appendTo(dialogActions);
+            if(is.string(action)){
+                if(["ask me later","cancel","close","decline","maybe later","no","no, thanks","remind me later"].includes(action)){
+                    new Button(action,"text").setAttribute({form:this.id,value:action}).appendTo(dialogActions);
+                }
+                if(["accept","acknowledge","agree","confirm","I understand","ok","okay","yes","yes, please"].includes(action)){
+                    new Button(action,"text").setAttribute({form:this.id,value:action,autofocus:"true"}).appendTo(dialogActions);
+                }
+            }
+        }
+    }
+    getValue(remove=true){
+        let dialog, value;
+        try{
+            dialog = this.getNode();
+            value = dialog.returnValue;
+        } catch (error) {
+            value = "";
+            console.groupCollapsed(`Could not get dialog return value.`);
+            console.error(error);
+            console.warn(`getValue() returned ${value} instead.`);
+            console.groupEnd();
+        } finally{
+            if(remove) dialog.remove();
+            return value;
+        }
+    }
+    setAriaLabel(ariaLabel = ""){
+        this.attributes["aria-label"] = ariaLabel;
+        return this;
+    }
+    setCallback(f=function(){}){
+        this.callback = f;
+    }
+    setIcon(name = ""){
+        this.icon = name;
+        return this;
+    }
+    setOpen(open=true){
+        this.open = open;
+        if(this.exists()) {
+            if(open) this.getNode().setAttribute("open","true");
+            else this.getNode().removeAttribute("open")
+        }
+        return this;
     }
 }
 export class Divider extends Child {
     constructor(){
         super();
+    }
+    appendTo(parent = getQueue()){
+        new Child("md-divider")
+            .appendTo(parent);
     }
 }
 export class Fab extends Child {
