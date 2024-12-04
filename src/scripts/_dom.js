@@ -159,12 +159,12 @@ export class Button extends Child {
     constructor(label="", variant="filled-tonal"){
         super();
         this.label = label;
-        this.variant = [
-                "elevated","filled","filled-tonal","outlined","text"
-            ].includes(variant) ? variant : "filled-tonal";
+        this.tag = [
+                "elevated","filled","outlined","text"
+            ].includes(variant) ? `md-${variant}-button` : "md-filled-tonal-button";
     }
     appendTo(parent = getQueue()){
-        let button = new Child(`md-${this.variant}-button`)
+        let button = new Child(this.tag)
             .setId(this.id)
             .setInnerText(this.label)
             .appendTo(parent);
@@ -633,9 +633,7 @@ export class Chip extends Child {
                 }
             }
             if(is.string(this.icon)){
-                new Child("md-icon")
-                    .setInnerText(this.icon)
-                    .appendTo(chip);
+                new Icon(this.icon).appendTo(chip);
             }
             if(is.function(this.callback)){
                 if(this.variant === "assist" || this.variant === "suggestion"){
@@ -806,7 +804,7 @@ export class Details extends Child{
         this.summaryClosed = summaryClosed;
         this.summaryOpen = summaryOpen;
     }
-    build(parent = _.getQueue()){
+    appendTo(parent = _.getQueue()){
         let details = new Child("details")
             .setId(this.id)
             .setAttribute(this.attributes)
@@ -830,14 +828,15 @@ export class Details extends Child{
 export class Dialog extends Child {
     constructor(headline = "", content = [], actions = [], removeOnSubmit=false){
         super();
-        this.actions = coerce.array(this.actions, [this.actions]);
-        this.content = coerce.array(this.content, [this.content]);
+        this.actions = coerce.array(actions, [actions]);
+        this.content = coerce.array(content, [content]);
         this.headline = headline;
         this.open = true;
         this.removeOnSubmit = removeOnSubmit;
     }
     appendTo(parent = document.body){
         let dialog = new Child("md-dialog")
+            .setId(this.id)
             .setAttribute({open:this.open})
             .appendTo(parent);
         if(is.function(this.callback) && this.removeOnSubmit){
@@ -871,6 +870,7 @@ export class Dialog extends Child {
                 }
             }
         }
+        return this;
     }
     getValue(remove=true){
         let dialog, value;
@@ -894,6 +894,7 @@ export class Dialog extends Child {
     }
     setCallback(f=function(){}){
         this.callback = f;
+        return this;
     }
     setIcon(name = ""){
         this.icon = name;
@@ -921,14 +922,28 @@ export class Divider extends Child {
             this.attributes[this.inset]=true;
         }
         new Child("md-divider")
+            .setId(this.id)
             .setAttribute(this.attributes)
             .appendTo(parent);
         return this;
     }
 }
 export class Fab extends Child {
-    constructor(){
+    constructor(icon="",size="normal",label=""){
         super();
+        this.icon = icon;
+        if(label) this.attributes.label = label;
+        if(["small","large"].includes(size)) this.attributes.size = size;
+    }
+    appendTo(parent=getQueue()){
+        let fab = new Child("md-fab")
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .appendTo(parent);
+        new Icon(this.icon)
+            .setAttribute({slot:"icon"})
+            .appendTo(fab);
+        return this;
     }
 }
 export class Form extends Child {
@@ -937,8 +952,10 @@ export class Form extends Child {
     }
 }
 export class Icon extends Child {
-    constructor(){
+    constructor(name="grid_guides"){
         super();
+        this.tag = "md-icon";
+        this.innerText = name;
     }
 }
 export class List extends Child {
