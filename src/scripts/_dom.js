@@ -323,16 +323,14 @@ export class Radio extends Child {
 export class Select extends Child {
     constructor(name = "", options = [], variant = "outlined"){
         super();
+        this.name = name;
         this.options = options;
-        this.variant = ["filled", "outlined"].includes(variant) ? variant : "outlined";
-        this.attributes = {
-            name: name
-        };
+        this.tag = ["filled", "outlined"].includes(variant) ? `md-${variant}-select` : "md-outlined-select";
     }
     appendTo(parent = getQueue()){
-        let select = new Child(`md-${this.variant}-select`)
+        let select = new Child(this.tag)
         for(const option of this.options) {
-            let selectOption = new Child(`md-select-option`)
+            let selectOption = new Child("md-select-option")
                 .setId(this.id)
                 .setAttribute(this.attributes)
                 .setClassList(this.classList)
@@ -343,6 +341,9 @@ export class Select extends Child {
                 .appendTo(selectOption);
         }
         return this;
+    }
+    getSelection(){
+        return this.getNode().value;
     }
     setAlignEnd(alignEnd = true){
         if(alignEnd) this.attributes["menu-align"] = "end";
@@ -372,36 +373,38 @@ export class Select extends Child {
         this.attributes["supporting-text"] = text;
         return this;
     }
-    setVariant(variant = "filled"){
-        const validVariants = ["filled", "outlined"];
-        if(validVariants.includes(variant)){
-            this.variant = variant;
-        } else {
-            console.groupCollapsed(`Could not set select variant.`);
-            console.error(`"${variant}" is not a valid select variant.`);
-            console.warn(`setVariant() defaulted to ${this.variant}.`);
-            console.info("Valid parameters are:");
-            console.table(validVariants);
-            console.groupEnd();
-        }
-        return this;
-    }
 }
 export class Slider extends Child {
-    constructor(max = 100, min = 0, showLabel = false){
+    constructor(name = "", max = 100, min = 0, showLabel = false){
         super();
-        this.attributes = {
-            max: max,
-            min: min,
-        }
+        this.name = name;
+        this.attributes.max = max;
+        this.attributes.min = min;
         if(showLabel) this.attributes.labeled = true;
     }
     appendTo(parent = getQueue()){
-        new Child(`md-slider`)
+        new Child("md-slider")
             .setId(this.id)
             .setAttribute(this.attributes)
-            .setClassList(this.classList);
+            .appendTo(parent);
         return this;
+    }
+    getSelection(){
+        let slider = this.getNode();
+        if(this.attributes.range) {
+            return {
+                type: "range",
+                [this.name]: {
+                    start: slider["value-start"],
+                    end: slider["value-end"]
+                }
+            }; 
+        } else {
+            return {
+                type: "slider",
+                [this.name]: slider.value
+            }
+        }
     }
     setDisabled(disabled = true){
         if(disabled) this.attributes.disabled = true;
@@ -477,10 +480,8 @@ export class Textfield extends Child {
         super();
         this.name = name;
         this.externalLabel = false;
-        this.variant = ["filled", "outlined"].includes(variant) ? variant : "outlined";
-        this.attributes = {
-            name: label
-        };
+        this.tag = ["filled", "outlined"].includes(variant) ? `md-${variant}-text-field` : "md-outlined-text-field";
+        this.attributes.name = label;
     }
     appendTo(parent = getQueue()){
         if(this.externalLabel){
@@ -489,12 +490,15 @@ export class Textfield extends Child {
                 .setInnerText(this.label)
                 .appendTo(parent);
         }
-        new Child(`md-${this.variant}-text-field`)
+        new Child(this.tag)
             .setId(this.id)
             .setAttribute(this.attributes)
             .setClassList(this.classList)
             .appendTo(parent);
         return this;
+    }
+    getSelection(){
+        return this.getNode().value;
     }
     setAriaLabel(ariaLabel = ""){
         this.attributes["aria-label"] = ariaLabel;
@@ -573,20 +577,6 @@ export class Textfield extends Child {
     }
     setValidPattern(regex = ""){
         this.attributes.pattern = regex;
-        return this;
-    }
-    setVariant(variant = "filled"){
-        const validVariants = ["filled", "outlined"];
-        if(validVariants.includes(variant)){
-            this.variant = variant;
-        } else {
-            console.groupCollapsed(`Could not set select variant.`);
-            console.error(`"${variant}" is not a valid select variant.`);
-            console.warn(`setVariant() defaulted to ${this.variant}.`);
-            console.info("Valid parameters are:");
-            console.table(validVariants);
-            console.groupEnd();
-        }
         return this;
     }
 }
@@ -751,27 +741,12 @@ export class Chipset extends Child {
         }
         return this;
     }
-    getValues(onlySelectedChips = false){
-        try{
-            if(onlySelectedChips){
-                return this.getNode().querySelectorAll("md-filter-chip[selected]").reduce((acc, cv, i) => {
-                    acc[i] = cv.innerText;
-                    return acc;
-                }, []);
-            } else {
-                return this.getNode().querySelectorAll("md-filter-chip, md-input-chip")
-                    .reduce((acc, cv, i) => {
-                        acc[i] = cv.innerText;
-                        return acc;
-                    }, []);
-            }
-        } catch (error) {
-            console.groupCollapsed(`Could not get chip values.`);
-            console.error(error);
-            console.warn(`getValues() returned an empty array instead.`)
-            console.groupEnd();
-            return [];
-        }
+    getSelection(){
+        return this.getNode().querySelectorAll("md-filter-chip[selected],md-input-chip")
+            .reduce((acc, cv) => {
+                acc.push(cv.innerText);
+                return acc;
+            },[]);
     }
     setCallback(f=function(){}){
         this.callback = f;
@@ -849,16 +824,18 @@ export class Dialog extends Child {
             .setAttribute({slot: "headline"})
             .setInnerText(this.headline)
             .appendTo(dialog);
-        let dialogContent = new Child("form")
-                .setAttribute({slot:"content",method:"dialog"})
-                .appendTo(dialog);
+        new Form(
+            this.content.reduce((accumulator, currentValue) => {
+                if(currentValue instanceof Child) accumulator.push(currentValue);
+                if(is.string(currentValue)) accumulator.push(new Child().setInnerText(currentValue));
+                return accumulator;
+            },[])
+        ).setAttribute({slot:"content",method:"dialog"}).appendTo(dialog);
         for(const block of this.content){
             if(block instanceof Child) block.appendTo(dialogContent);
-            if(is.string(block)) new Child("div").setInnerText(block).appendTo(dialogContent);
+            if(is.string(block)) new Child().setInnerText(block).appendTo(dialogContent);
         }
-        let dialogActions = new Child("form")
-            .setAttribute({slot:"actions"})
-            .appendTo(dialog);
+        let dialogActions = new Child().setAttribute({slot:"actions"}).appendTo(dialog);
         for(const action of this.actions){
             if(action instanceof Button) action.setAttribute({form:this.id}).appendTo(dialogActions);
             if(is.string(action)){
@@ -945,10 +922,32 @@ export class Fab extends Child {
             .appendTo(fab);
         return this;
     }
+    setColor(color="primary"){
+        if(["primary","secondary","tertiary"].includes(color)) this.attributes.variant = color;
+        else delete this.attributes.variant;
+        return this;
+    }
 }
 export class Form extends Child {
-    constructor(){
+    constructor(fields=[]){
         super();
+        this.fields = fields;
+    }
+    appendTo(parent=getQueue()){
+        let form = new Child("form")
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent);
+        for(const field of fields) if(field instanceof Child) field.appendTo(form);
+        return this;
+    }
+    getData(){
+        return this.data = this.fields.reduce((accumulator, cv) => {
+            if(cv instanceof Chipset || cv instanceof Select || cv instanceof Slider || cv instanceof Textfield)
+                accumulator.push(cv.getSelection());
+            return accumulator;
+        },[]);
     }
 }
 export class Icon extends Child {
