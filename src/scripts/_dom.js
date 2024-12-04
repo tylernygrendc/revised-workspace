@@ -909,12 +909,21 @@ export class Dialog extends Child {
     }
 }
 export class Divider extends Child {
-    constructor(){
+    constructor(inset=false){
         super();
+        this.inset=inset;
     }
     appendTo(parent = getQueue()){
+        if(is.boolean(this.inset)){
+            if(this.inset) this.attributes.inset = true;
+            else delete this.attributes.inset;
+        } else if(is.string(this.inset) && ["inset-start","inset-end"].includes(this.inset)){
+            this.attributes[this.inset]=true;
+        }
         new Child("md-divider")
+            .setAttribute(this.attributes)
             .appendTo(parent);
+        return this;
     }
 }
 export class Fab extends Child {
