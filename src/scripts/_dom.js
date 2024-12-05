@@ -168,7 +168,7 @@ export class Button extends Child {
             .setId(this.id)
             .setInnerText(this.label)
             .appendTo(parent);
-        if(is.function(this.callback)) button.getNode().addEventListener("click",this.callback());
+        if(is.function(this.callback)) button.getNode().addEventListener("click",this.callback);
         return this;
     }
     setCallback(f=function(){}){
@@ -188,7 +188,7 @@ export class Button extends Child {
     }
     setLink(href = "", openInNewWindow = false){
         Object.assign(this.attributes, {
-            href: coerce.string(href), 
+            href: href, 
             target: openInNewWindow ? "_blank" : "_self"
         });
         return this;
@@ -627,7 +627,7 @@ export class Chip extends Child {
             }
             if(is.function(this.callback)){
                 if(this.variant === "assist" || this.variant === "suggestion"){
-                    chip.addEventListener("click", this.callback());
+                    chip.addEventListener("click", this.callback);
                 } else {
                     console.groupCollapsed("Event listener was not added to chip.");
                     console.error("Callback functions can only be set on assist chips and suggestion chips.");
@@ -958,8 +958,75 @@ export class Icon extends Child {
     }
 }
 export class List extends Child {
-    constructor(){
+    constructor(items=[],useDividers=true){
         super();
+    }
+    appendTo(parent = getQueue()){
+        let list = new Child('md-list')
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent), i=0;
+        for(const item of this.items){
+            if(item instanceof Li) item.appendTo(list);
+            if(useDividers && ++i < this.items.length) new Divider().appendTo(list);
+        }
+        return this;
+    }
+}
+export class Li extends Child {
+    constructor(headline="", supportingText=""){
+        super();
+        this.headline = headline;
+        this.supportingText = supportingText;
+    }
+    appendTo(parent = getQueue()){
+        let li = new Child('md-list-item')
+            .setId(this.id)
+            .setAttribute(this.attributes);
+        if(supportingText){
+            li.appendTo(parent);
+            new Child("div")
+                .setAttribute({slot:"headline"})
+                .setInnerText(this.headline)
+                .appendTo(li);
+            new Child("div")
+                .setAttribute({slot:"supporting-text"})
+                .setInnerText(this.supportingText)
+                .appendTo(li);
+        } else { li.setInnerText(this.headline).appendTo(parent); }
+        if(this.start) this.start.appendTo(li);
+        if(this.end) this.end.appendTo(li);
+        if(this.callback) li.addEventListener("click",this.callback);
+    }
+    setCallback(f=function(){},icon="code"){
+        delete this.attributes.href;
+        delete this.attributes.target;
+        this.callback = f;
+        this.attributes.type = "button";
+        this.end = new Icon(icon);
+        return this;
+    }
+    setIcon(name="", ){
+        this.start = new Icon(name)
+            .setAttribute({slot:"start"});
+        return this;
+    }
+    setImage(src=""){
+        this.start = new Img(src)
+            .setAlt(`image for ${this.headline}`)
+            .setAttribute({slot:"start",style:"width:56px;"});
+        return this;
+    }
+    setLink(href="", openInNewWindow = true){
+        delete this.callback;
+        Object.assign(this.attributes, {
+            type: "link",
+            href: href, 
+            target: openInNewWindow ? "_blank" : "_self"
+        });
+        this.end = new Icon(openInNewWindow ? "open_in_new" : "link");
+        return this;
     }
 }
 export class Menu extends Child {
