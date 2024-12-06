@@ -88,7 +88,7 @@ $surface-container--dark: color.adjust($primary, $saturation: -82%, $lightness: 
 $surface-container-high--dark: color.adjust($primary, $saturation: -87%, $lightness: -6%);
 $surface-container-highest--dark: color.adjust($primary, $hue: -2deg, $saturation: -89%, $lightness: -2%);
 
-:root{
+:root,:host{
     --md-sys-color-primary: #{$primary};
     --md-sys-color-surface-tint: #{$surface-tint};
     --md-sys-color-on-primary: #{$on-primary};
@@ -127,7 +127,7 @@ $surface-container-highest--dark: color.adjust($primary, $hue: -2deg, $saturatio
 }
       
 @media (prefers-color-scheme: dark){
-    :root{
+    :root,:host{
         --md-sys-color-primary: #{$primary--dark};
         --md-sys-color-surface-tint: #{$surface-tint--dark};
         --md-sys-color-on-primary: #{$on-primary--dark};
@@ -166,3 +166,6 @@ $surface-container-highest--dark: color.adjust($primary, $hue: -2deg, $saturatio
     }
 }
     
+body{
+    background-color: var(--md-sys-color-background);
+}
