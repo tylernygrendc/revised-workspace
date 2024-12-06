@@ -1,65 +1,23 @@
 export const coerce = {
     array: (array, fallback = []) => {
-        try{ 
-            if(is.array(array)) return array;
-            else throw new Error(`Expected an array but received ${typeof array} instead.`);
-        } catch (error) { 
-            console.groupCollapsed(`Parameter is not an array.`);
-            console.warn(error);
-            console.info(`array() returned ${fallback} instead.`)
-            console.table(fallback);
-            console.groupEnd();
-            return fallback;
-        }
+        if(is.array(array)) return array;
+        else return fallback;
     },
     boolean: (boolean, fallback = false) => {
-        try{
-            if(is.boolean(boolean)) return boolean;
-            else throw new Error(`Expected type of "boolean" but received type of "${typeof boolean}" instead.`);
-        } catch (error) {
-            console.groupCollapsed(`Parameter is not a type of boolean.`);
-            console.warn(error);
-            console.info(`boolean() returned ${fallback} instead.`);
-            console.groupEnd();
-            return fallback; 
-        }
+        if(is.boolean(boolean)) return boolean;
+        else return fallback;
     },
     number: (number, fallback = 0) => {
-        try{ 
-            if(is.number(number)) return number;
-            else throw new Error(`Expected type of "number" but received type of "${typeof number}" instead.`);
-        } catch (error) { 
-            console.groupCollapsed(`Parameter is not a type of number.`);
-            console.warn(error);
-            console.info(`number() returned ${fallback} instead.`);
-            console.groupEnd();
-            return fallback; 
-        }
+        if(is.number(number)) return number;
+        else return fallback;
     },
     object: (object, fallback = {}) => {
-        try{ 
-            if(is.object(object)) return object;
-            else throw new Error(`Expected type of "object" but received type of "${typeof object}" instead.`);
-        } catch (error) { 
-            console.groupCollapsed(`Parameter is not a type of object.`);
-            console.warn(error);
-            console.info(`object() returned ${fallback} instead.`);
-            console.table(fallback);
-            console.groupEnd();
-            return fallback; 
-        }
+        if(is.object(object)) return object;
+        else return fallback;
     },
     string: (string, fallback = "") => {
-        try{ 
-            if(is.string(string)) return string;
-            else throw new Error(`Expected type of "string" but received type of "${typeof string}" instead.`);
-        } catch (error) {
-            console.groupCollapsed(`Parameter is not a type of string.`);
-            console.warn(error);
-            console.info(`string() returned "${fallback}" instead.`)
-            console.groupEnd();
-            return fallback; 
-        }
+        if(is.string(string)) return string;
+        else return fallback;
     }
 }
 export const is = {
