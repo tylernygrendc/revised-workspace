@@ -16,8 +16,6 @@ export class Child {
         } catch(error) {
             console.groupCollapsed(`Could not append ${this} to ${parent}.`);
             console.error(error);
-            console.info(`appendTo() returned:`);
-            console.table(this);
             console.groupEnd();
         } finally {
             return this;
@@ -111,8 +109,6 @@ export class Child {
             console.groupCollapsed(`Could not set attribute on ${this} from ${object}.`);
             console.error(error);
             console.warn(`Attributes on ${this} were not changed.`);
-            console.info(`setAttribute() returned ${this}:`)
-            console.table(this.attributes);
             console.groupEnd();
         } finally {
             return this;
@@ -131,8 +127,6 @@ export class Child {
             console.groupCollapsed(`Could not set classList on ${this} from ${array}.`);
             console.error(error);
             console.warn(`Classes on ${this} were not changed.`);
-            console.info(`setClassList() returned ${this}:`)
-            console.table(this.classList);
             console.groupEnd();
         } finally {
             return this;
@@ -206,8 +200,6 @@ export class Button extends Child {
             console.groupCollapsed(`Could not set button type.`);
             console.error(`"${type}" is not a valid button type.`);
             console.warn(`setType() defaulted to ${this.attributes.type}.`);
-            console.info("Valid parameters are:");
-            console.table(validTypes);
             console.groupEnd();
         }
         return this;
@@ -227,8 +219,6 @@ export class Button extends Child {
             console.groupCollapsed(`Could not set button variant.`);
             console.error(`"${variant}" is not a valid button variant.`);
             console.warn(`setVariant() defaulted to ${this.variant}.`);
-            console.info("Valid parameters are:");
-            console.table(validVariants);
             console.groupEnd();
         }
     }
@@ -325,9 +315,11 @@ export class Select extends Child {
     }
     appendTo(parent = getQueue()){
         let select = new Child(this.tag)
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .appendTo(parent);
         for(const option of this.options) {
             let selectOption = new Child("md-select-option")
-                .setId(this.id)
                 .setAttribute(this.attributes)
                 .setClassList(this.classList)
                 .appendTo(select);
@@ -681,8 +673,6 @@ export class Chip extends Child {
             console.groupCollapsed(`Could not set chip variant.`);
             console.error(`"${variant}" is not a valid chip variant.`);
             console.warn(`Variant attribute was defaulted to "${this.variant}".`)
-            console.info(`Valid chip variants are:`);
-            console.table(validVariants);
             console.groupEnd();
         }
     }
