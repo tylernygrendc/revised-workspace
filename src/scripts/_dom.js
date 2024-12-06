@@ -813,6 +813,7 @@ export class Dialog extends Child {
         let dialog = new Child("md-dialog")
             .setId(this.id)
             .setAttribute({open:this.open})
+            .setClassList(this.classList)
             .appendTo(parent);
         if(is.function(this.callback) && this.removeOnSubmit){
             dialog.getNode().addEventListener("close",function(){})
@@ -957,23 +958,6 @@ export class Icon extends Child {
         this.innerText = name;
     }
 }
-export class List extends Child {
-    constructor(items=[],useDividers=true){
-        super();
-    }
-    appendTo(parent = getQueue()){
-        let list = new Child('md-list')
-            .setId(this.id)
-            .setAttribute(this.attributes)
-            .setClassList(this.classList)
-            .appendTo(parent), i=0;
-        for(const item of this.items){
-            if(item instanceof Li) item.appendTo(list);
-            if(useDividers && ++i < this.items.length) new Divider().appendTo(list);
-        }
-        return this;
-    }
-}
 export class Li extends Child {
     constructor(headline="", supportingText=""){
         super();
@@ -1029,9 +1013,111 @@ export class Li extends Child {
         return this;
     }
 }
-export class Menu extends Child {
-    constructor(){
+export class List extends Child {
+    constructor(items=[],useDividers=true){
         super();
+        this.items = items;
+        this.useDividers = useDividers;
+    }
+    appendTo(parent = getQueue()){
+        let list = new Child('md-list')
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent), i=0;
+        for(const item of this.items){
+            if(item instanceof Li) item.appendTo(list);
+            if(this.useDividers && ++i < this.items.length) new Divider().appendTo(list);
+        }
+        return this;
+    }
+}
+export class Mi extends Child {
+    constructor(headline=""){
+        super();
+        this.headline=headline;
+    }
+    appendTo(parent = getQueue()){
+        let menuItem = new Child('md-menu-item')
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .appendTo(parent);
+        new Child()
+            .setAttribute({slot:"headline"})
+            .setInnerText(headline)
+            .appendTo(menuItem);
+        if(this.icon) new Icon(this.icon).setAttribute({slot:"end"}).appendTo(menuItem);
+        if(this.callback) menuItem.getNode().addEventListener("click",this.callback);
+    }
+    setCallback(f=function(){}){
+        this.callback = f;
+        return this;
+    }
+    setDisabled(disabled=true){
+        if(disabled) this.attributes.disabled = true;
+        else delete this.attributes.disabled;
+        return this;
+    }
+    setLink(href="",openInNewWindow=false){
+        this.icon = openInNewWindow ? "open_in_new" : "link";
+        this.attributes.href = href;
+        this.attributes.target = openInNewWindow ? "_blank" : "_self";
+        return this;
+    }
+}
+export class Menu extends Child {
+    constructor(items=[],anchor=""){
+        super();
+        this.items = items;
+        this.attributes.anchor = anchor;
+    }
+    appendTo(parent = getQueue()){
+        try{
+            let menu, anchor = document.querySelector(`#${this.attributes.anchor}`);
+            if(!this.attributes.anchor || anchor === null){
+                throw new Error(`${this.attributes.anchor} is not a valid anchor.`);
+            } else {
+                menu = new Child('md-menu')
+                    .setId(this.id)
+                    .setAttribute(this.attributes)
+                    .setClassList(this.classList)
+                    .appendTo(parent);
+                if(window.getComputedStyle(anchor).getPropertyValue("position") != "relative"){
+                    anchor.style.position = "relative";
+                    console.groupCollapsed(`<${anchor.tagName} id=${anchor.id}> was automatically assigned "style=position:relative;".`);
+                    console.error("Menu parent must have relative positioning.")
+                    console.warn(`Automatic position assignment may have unintended consequences. Explicitly define position on <${anchor.tagName} id=${anchor.id}> to avoid style errors.`);
+                    console.groupEnd();
+                }
+            }
+            for(const item of this.items){
+                if(item instanceof Mi) item.appendTo();
+                if(item instanceof Menu) {
+                    this.getNode()["has-overflow"] = "true";
+                    let submenu = new Child("md-sub-menu")
+                        .appendTo(menu);
+                    let submenuLabel = new Child("md-menu-item")
+                        .setAttribute({slot:"item"})
+                        .appendTo(submenu);
+                    new Child()
+                        .setInnerText(item.label ? item.label : "submenu")
+                        .setAttribute({slot:"headline"})
+                        .appendTo(submenuLabel);
+                    new Icon("arrow_right")
+                        .setAttribute({slot:"end"})
+                        .appendTo(submenuLabel);
+                    item.setAttribute({slot:"menu"})
+                        .appendTo(menu);
+                }
+            }
+        } catch (error) {
+            console.groupCollapsed("Could not create <md-menu>.");
+            console.error(error);
+            console.warn(`appendTo() returned ${this}.`)
+            console.groupEnd();
+        } finally {
+            return this;
+        }
     }
 }
 export class Navigation extends Child {
