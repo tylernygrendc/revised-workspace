@@ -118,6 +118,10 @@ export class Child {
             return this;
         }
     }
+    setAriaLabel(ariaLabel=""){
+        this.attributes["aria-label"] = ariaLabel;
+        return this;
+    }
     setClassList(array = []){
         try {
             if(is.array(array)){
@@ -248,10 +252,6 @@ export class Checkbox extends Child {
             .appendTo(parent);
         return this;
     }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
-        return this;
-    }
     setChecked(checked = true) {
         if(checked) this.attributes.checked = true;
         else delete this.attributes.checked;
@@ -294,10 +294,6 @@ export class Radio extends Child {
             .setId(this.id)
             .setAttribute(this.attributes)
             .appendTo(parent);
-        return this;
-    }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
         return this;
     }
     setChecked(checked = true) {
@@ -446,10 +442,6 @@ export class Switch extends Child {
             .appendTo(parent);
         return this;
     }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
-        return this;
-    }
     setChecked(checked = true) {
         if(checked) this.attributes.selected = true;
         else delete this.attributes.selected;
@@ -499,10 +491,6 @@ export class Textfield extends Child {
     }
     getSelection(){
         return this.getNode().value;
-    }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
-        return this;
     }
     setAutocomplete(token = "on"){
         this.attributes.autocomplete = token;
@@ -645,10 +633,6 @@ export class Chip extends Child {
     setAvatar(src = ""){
         this.avatar = src;
         this.attributes.avatar = true;
-        return this;
-    }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
         return this;
     }
     setCallback(f){
@@ -866,10 +850,6 @@ export class Dialog extends Child {
             return value;
         }
     }
-    setAriaLabel(ariaLabel = ""){
-        this.attributes["aria-label"] = ariaLabel;
-        return this;
-    }
     setCallback(f=function(){}){
         this.callback = f;
         return this;
@@ -1066,9 +1046,10 @@ export class Mi extends Child {
     }
 }
 export class Menu extends Child {
-    constructor(items=[],anchor=""){
+    constructor(label="",anchor="",items=[]){
         super();
         this.items = items;
+        this.label = label;
         this.attributes.anchor = anchor;
     }
     appendTo(parent = getQueue()){
@@ -1131,8 +1112,13 @@ export class Picture extends Child {
     }
 }
 export class Progress extends Child {
-    constructor(){
+    constructor(value=0,linear=false,buffer=0){
         super();
+        this.tag = linear ? "md-linear-progress" : "md-circular-progress";
+        this.attributes.max = 100;
+        if(value) this.attributes.value = value;
+        else this.attributes.indeterminate = true;
+        if(buffer && !linear) this.attributes.buffer = buffer;
     }
 }
 export class Search extends Child {
