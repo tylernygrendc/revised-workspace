@@ -236,7 +236,7 @@ export class Checkbox extends Child {
                 .setInnerText(this.label)
                 .appendTo(parent);
         }
-        new Child("md-radio")
+        new Child("md-checkbox")
             .setId(this.id)
             .setAttribute(this.attributes)
             .appendTo(parent);
@@ -877,7 +877,7 @@ export class Divider extends Child {
     }
 }
 export class Fab extends Child {
-    constructor(icon="",size="normal",label=""){
+    constructor(icon="",label="",size="normal"){
         super();
         this.icon = icon;
         if(label) this.attributes.label = label;
