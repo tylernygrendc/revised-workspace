@@ -1,8 +1,8 @@
 import { getQueue, getRandomId } from "./_utilities.js";
 import { coerce, is, not } from "./_type.js";
 export class Child {
-    constructor(tag = "div"){
-        this.tag = coerce.string(tag, "div");
+    constructor(tag = ""){
+        this.tag = tag ? tag : "div";
         this.id = getRandomId();
         this.classList = [];
         this.attributes = {};
@@ -26,12 +26,9 @@ export class Child {
         try {
             child = document.createElement(this.tag);
             child.id = this.id;
+            for(const [key, val] of Object.entries(this.attributes)) child.setAttribute(key, val);
             for(const str of this.classList) child.classList.add(str);
-            for(const [key, val] of Object.entries(this.attributes)) {
-                if(this.tag === "img" && key === "src" ) child.src = chrome.runtime.getURL(val);
-                else child.setAttribute(key, val);
-            }
-            if(is.string(this.innerText)){
+            if(this.innerText){
                 let text = document.createTextNode(this.innerText);
                 child.appendChild(text);
             }
@@ -192,8 +189,7 @@ export class Button extends Child {
         return this;
     }
     setType(type = ""){
-        const validTypes = ["button, submit, reset"]
-        if(validTypes.includes(type)){
+        if(["button, submit, reset"].includes(type)){
             this.attributes.type = type;
         } else {
             this.attributes.type = "button";
@@ -212,8 +208,7 @@ export class Button extends Child {
         return this;
     }
     setVariant(variant = ""){
-        const validVariants = ["elevated", "filled", "filled-tonal", "outlined", "text"];
-        if(validVariants.includes(variant)){
+        if(["elevated", "filled", "filled-tonal", "outlined", "text"].includes(variant)){
             this.variant = variant;
         } else {
             console.groupCollapsed(`Could not set button variant.`);
@@ -465,7 +460,7 @@ export class Textfield extends Child {
         this.name = name;
         this.externalLabel = false;
         this.tag = ["filled", "outlined"].includes(variant) ? `md-${variant}-text-field` : "md-outlined-text-field";
-        this.attributes.name = label;
+        this.attributes.name = name;
     }
     appendTo(parent = getQueue()){
         if(this.externalLabel){
@@ -584,8 +579,8 @@ export class Chip extends Child {
         super();
         this.label = label;
     }
-    appendTo(parent){
-        if(parent.tagName === "md-chip-set" || parent.tag === "md-chip-set"){
+    appendTo(parent=getQueue()){
+        if(parent instanceof Chipset || parent.tagName === "MD-CHIP-SET"){
             let chip = new Child(`md-${this.variant}-chip`)
                 .setId(this.id)
                 .setAttribute(this.attributes)
@@ -666,8 +661,7 @@ export class Chip extends Child {
         return this;
     }
     setVariant(variant){
-        const validVariants = ["assist","input","filter","suggestion"];
-        if(validVariants.includes(variant)){
+        if(["assist","input","filter","suggestion"].includes(variant)){
             this.variant = variant;
         } else {
             console.groupCollapsed(`Could not set chip variant.`);
@@ -675,6 +669,7 @@ export class Chip extends Child {
             console.warn(`Variant attribute was defaulted to "${this.variant}".`)
             console.groupEnd();
         }
+        return this;
     }
 }
 export class Chipset extends Child {
@@ -687,29 +682,28 @@ export class Chipset extends Child {
             .setId(this.id)
             .setAttribute(this.attributes)
             .setClassList(this.classList)
-            .appendTo(parent);
-
-        if(this.chips.length){
-            for(const chip of this.chips) {
-                if(is.string(chip)) {
-                    if(is.function(this.callback)){
-                        new Chip(chip)
-                            .setVariant("suggestion")
-                            .setCallback(this.callback)
-                            .appendTo(chipset);
-                    } else {
-                        new Chip(chip)
-                            .setVariant("filter")
-                            .appendTo(chipset);
-                    }
-                } 
-                if(chip instanceof Chip) {
-                    if(is.function(chip.callback) || is.string(chip.attributes.href)){
-                        chip.setVariant("assist")
-                            .appendTo(chipset);
-                    } else {
-                        chip.appendTo(chipset); // defaults to <md-chip-input>
-                    }
+            .appendTo(parent)
+            .getNode();
+        for(const chip of this.chips) {
+            if(is.string(chip)) {
+                if(is.function(this.callback)){
+                    new Chip(chip)
+                        .setVariant("suggestion")
+                        .setCallback(this.callback)
+                        .appendTo(chipset);
+                } else {
+                    new Chip(chip)
+                        .setVariant("filter")
+                        .appendTo(chipset);
+                }
+            } 
+            if(chip instanceof Chip) {
+                if(is.function(chip.callback) || is.string(chip.attributes.href)){
+                    chip.setVariant("assist")
+                        .appendTo(chipset);
+                } else {
+                    chip.setVariant("input")
+                        .appendTo(chipset);
                 }
             }
         }
@@ -795,7 +789,7 @@ export class Dialog extends Child {
             dialog.getNode().addEventListener("close",function(){this.remove()});
         }
         if(this.icon) new Icon(this.icon).appendTo(dialog);
-        new Child("span")
+        new Child()
             .setAttribute({slot: "headline"})
             .setInnerText(this.headline)
             .appendTo(dialog);
@@ -806,10 +800,6 @@ export class Dialog extends Child {
                 return accumulator;
             },[])
         ).setAttribute({slot:"content",method:"dialog"}).appendTo(dialog);
-        for(const block of this.content){
-            if(block instanceof Child) block.appendTo(dialogContent);
-            if(is.string(block)) new Child().setInnerText(block).appendTo(dialogContent);
-        }
         let dialogActions = new Child().setAttribute({slot:"actions"}).appendTo(dialog);
         for(const action of this.actions){
             if(action instanceof Button) action.setAttribute({form:this.id}).appendTo(dialogActions);
@@ -910,7 +900,7 @@ export class Form extends Child {
             .setAttribute(this.attributes)
             .setClassList(this.classList)
             .appendTo(parent);
-        for(const field of fields) if(field instanceof Child) field.appendTo(form);
+        for(const field of this.fields) if(field instanceof Child) field.appendTo(form);
         return this;
     }
     getData(){
@@ -938,7 +928,7 @@ export class Li extends Child {
         let li = new Child('md-list-item')
             .setId(this.id)
             .setAttribute(this.attributes);
-        if(supportingText){
+        if(this.supportingText){
             li.appendTo(parent);
             new Child("div")
                 .setAttribute({slot:"headline"})
