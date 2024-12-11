@@ -586,7 +586,8 @@ export class Chip extends Child {
                 .setAttribute(this.attributes)
                 .setClassList(this.classList)
                 .setInnerText(this.label)
-                .appendTo(parent);
+                .appendTo(parent)
+                .getNode();
             if(is.string(this.avatar)){
                 if(this.variant === "input"){
                     new Img(this.avatar)
@@ -597,8 +598,9 @@ export class Chip extends Child {
                     console.groupEnd();
                 }
             }
+            if(is.string(this.attributes.href)) this.icon = this.attributes.target === "_blank" ? "open_in_new" : "link";
             if(is.string(this.icon)){
-                new Icon(this.icon).appendTo(chip);
+                new Icon(this.icon).setAttribute({slot:"icon"}).appendTo(chip);
             }
             if(is.function(this.callback)){
                 if(this.variant === "assist" || this.variant === "suggestion"){
