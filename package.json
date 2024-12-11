@@ -10,7 +10,8 @@
     "compress": "npm run compile && zip ./dist/* && mkdir compressed && mv ./dist/*.zip ./compressed/dist.zip",
     "pug": "node pug.config.js",
     "rollup": "rollup --config rollup.config.js --watch",
-    "sass": "sass --watch --no-source-map src/styles:dist/styles"
+    "sass": "sass --watch --no-source-map src/styles:dist/styles",
+    "serve": "http-server ./dist -c-1 -o"
   },
   "type": "module",
   "author": "tylernygren@gmail.com",
