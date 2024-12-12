@@ -1,0 +1,19 @@
+md-check-list{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    md-check-item{
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        min-height: 1.5rem;
+        label{
+            flex: 1;
+        }
+        &.leading-checkbox label{
+                order: 2;
+        }
+    }
+}

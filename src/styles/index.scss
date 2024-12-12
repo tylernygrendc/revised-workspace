@@ -1,6 +1,9 @@
 @use "_blue";
 @use "_symbols";
+@use "_checklist";
 
 body{
     background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: "Roboto flex", sans-serif;
 }

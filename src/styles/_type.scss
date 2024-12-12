@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "Roboto Flex";
+    src: url("../assets/roboto.woff2") format("woff2");
+}
+
+:root, :host{
+    --md-ref-typeface-brand: "Roboto Flex";
+    --md-ref-typeface-plain: "Roboto Flex";
+}
