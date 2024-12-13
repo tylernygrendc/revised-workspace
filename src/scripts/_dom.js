@@ -149,6 +149,26 @@ class Img extends Child {
         return this;
     }
 }
+class MDChecklist extends HTMLElement {
+    constructor(){
+        super();
+    }
+}
+class MDCheckitem extends HTMLElement{
+    constructor(){
+        super();
+    }
+}
+class MDRadiolist extends HTMLElement {
+    constructor(){
+        super();
+    }
+}
+class MDRadioitem extends HTMLElement{
+    constructor(){
+        super();
+    }
+}
 // input
 export class Button extends Child {
     constructor(label="", variant="filled-tonal"){
@@ -221,8 +241,11 @@ export class Button extends Child {
 export class Checkbox extends Child {
     constructor(label = "", category = ""){
         super();
-        this.isStandalone = false;
         this.label = label;
+        this.isStandalone = false;
+        this.attributes.name = category ? category : label;
+        if(category) this.attributes.value = label;
+        this.attributes["touch-target"] = "wrapper";
     }
     appendTo(parent = getQueue()){
         if(!this.isStandalone){
@@ -262,11 +285,35 @@ export class Checkbox extends Child {
         return this;
     }
 }
+export class Checklist extends Child{
+    constructor(items = [], useDividers = false){
+        super();
+        this.items = items;
+        this.useDividers = useDividers;
+    }
+    appendTo(parent = getQueue()){
+        let list = new Child('md-check-list')
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent).getNode(), i=0;
+        for(const item of this.items){
+            if(item instanceof Checkbox) item.appendTo(
+                    new Child("md-check-item").appendTo(list)
+                );
+            if(this.useDividers && ++i < this.items.length) new Divider().appendTo(list);
+        }
+        return this;
+    }
+}
 export class Radio extends Child {
     constructor(label = "", category = ""){
         super();
-        this.isStandalone = false;
         this.label = label;
+        this.isStandalone = false;
+        this.attributes.name = category ? category : label;
+        if(category) this.attributes.value = label;
+        this.attributes["touch-target"] = "wrapper";
     }
     appendTo(parent = getQueue()){
         if(!this.isStandalone){
@@ -298,6 +345,27 @@ export class Radio extends Child {
     setValueInCategory(value = this.id, category = ""){
         this.attributes.name = category ? group : value;
         this.attributes.value = category ? value : "on";
+        return this;
+    }
+}
+export class Radiolist extends Child{
+    constructor(items = [], useDividers = false){
+        super();
+        this.items = items;
+        this.useDividers = useDividers;
+    }
+    appendTo(parent = getQueue()){
+        let list = new Child('md-radio-list')
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .setClassList(this.classList)
+            .appendTo(parent).getNode(), i=0;
+        for(const item of this.items){
+            if(item instanceof Radio) item.appendTo(
+                new Child("md-radio-item").appendTo(list)
+            );
+            if(this.useDividers && ++i < this.items.length) new Divider().appendTo(list);
+        }
         return this;
     }
 }
@@ -944,6 +1012,7 @@ export class Li extends Child {
         if(this.start) this.start.appendTo(li);
         if(this.end) this.end.appendTo(li);
         if(this.callback) li.addEventListener("click",this.callback);
+        return this;
     }
     setCallback(f=function(){},icon="code"){
         delete this.attributes.href;
@@ -976,7 +1045,7 @@ export class Li extends Child {
     }
 }
 export class List extends Child {
-    constructor(items=[],useDividers=true){
+    constructor(items=[],useDividers=false){
         super();
         this.items = items;
         this.useDividers = useDividers;
@@ -986,7 +1055,7 @@ export class List extends Child {
             .setId(this.id)
             .setAttribute(this.attributes)
             .setClassList(this.classList)
-            .appendTo(parent), i=0;
+            .appendTo(parent).getNode(), i=0;
         for(const item of this.items){
             if(item instanceof Li) item.appendTo(list);
             if(this.useDividers && ++i < this.items.length) new Divider().appendTo(list);
@@ -1129,4 +1198,8 @@ export class Timepicker extends Child {
     }
 }
 
+customElements.define("md-check-list", MDChecklist);
+customElements.define("md-check-item", MDCheckitem);
+customElements.define("md-radio-list", MDRadiolist);
+customElements.define("md-radio-item", MDRadioitem);
 

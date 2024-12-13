@@ -1,6 +1,5 @@
-
 import "@material/web/all.js"
-import { Button,Checkbox,Radio,Select,Slider,Switch,Textfield,Chipset,Chip,Dialog,Fab,List,Li,Menu,Mi,Progress } from "./_dom.js";
+import { Button,Checkbox,Checklist,Radio,Radiolist,Select,Slider,Switch,Textfield,Chipset,Chip,Dialog,Fab,List,Li,Menu,Mi,Progress} from "./_dom.js";
 
 window.onload = () => {
     new Button("Button test").appendTo(document.body);
@@ -29,7 +28,8 @@ window.onload = () => {
     let checklistTest = ()=>{let array=[]; for(let i = 0; i < 5; ++i) array.push(new Checkbox(`List item test #${i}`)); return array;}
     let radioListTest = ()=>{let array=[]; for(let i = 0; i < 5; ++i) array.push(new Radio(`List item test #${i}`)); return array;}
     new List(listTest(),true).appendTo(document.body);
-    new List(checklistTest()).appendTo(document.body);
+    new Checklist(checklistTest()).appendTo(document.body);
+    new Radiolist(radioListTest(), true).appendTo(document.body);
     new List(radioListTest()).appendTo(document.body);
     new Progress().appendTo(document.body);
     new Progress(40,true,20).appendTo(document.body);
