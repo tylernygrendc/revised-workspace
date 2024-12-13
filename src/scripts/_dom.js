@@ -298,7 +298,7 @@ export class Checklist extends Child{
             .setClassList(this.classList)
             .appendTo(parent).getNode(), i=0;
         for(const item of this.items){
-            if(item instanceof Checkbox) item.appendTo(
+            if(item instanceof Checkbox || item instanceof Switch) item.appendTo(
                     new Child("md-check-item").appendTo(list)
                 );
             if(this.useDividers && ++i < this.items.length) new Divider().appendTo(list);
