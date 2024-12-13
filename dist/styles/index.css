@@ -172,6 +172,10 @@ body {
   font-family: "Roboto";
   src: url("../assets/roboto.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Material Symbols";
+  src: url("../assets/material-symbols.woff2") format("woff2");
+}
 :root, :host {
   --md-sys-typescale-body-large-font: var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto));
   --md-sys-typescale-body-large-line-height: var(--md-sys-typescale-body-large-line-height, 1.5rem);
@@ -240,18 +244,15 @@ body {
 :root, :host {
   --md-ref-typeface-brand: "Roboto";
   --md-ref-typeface-plain: "Roboto";
+  --md-icon-font: "Material Symbols";
 }
 
 body {
   font-family: var(--md-ref-typeface-plain);
 }
 
-@font-face {
-  font-family: "Material Icons";
-  src: url("../assets/material-icons.woff2") format("woff2");
-}
 md-icon {
-  font-family: "Material Icons";
+  font-family: "Material Symbols";
   font-weight: normal;
   font-style: normal;
   display: inline-block;
