@@ -1,4 +1,4 @@
-@mixin light {
+@mixin light-theme {
   :root,
   :host {
     --md-sys-color-background: #f5fafb;
@@ -40,7 +40,7 @@
     --md-sys-color-on-error-container: #410002;
   }
 }
-@mixin dark {
+@mixin dark-theme {
   :root,
   :host {
     --md-sys-color-background: #0e1415;
@@ -83,15 +83,20 @@
   }
 }
 
-@include light;
+@include light-theme;
 
 @media (prefers-color-scheme: dark) {
-  @include dark;
+  @include dark-theme;
 }
 
 .use-light-theme {
-  @include light;
+  @include light-theme;
 }
 .use-dark-theme {
-  @include dark;
+  @include dark-theme;
 }
+body{
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+

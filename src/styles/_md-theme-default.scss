@@ -1,0 +1,21 @@
+@use "../../node_modules/@material/web/tokens/md-ref-palette" as tokens;
+@use "../../node_modules/@material/web/color/color" as color;
+
+:root, :host{
+    @include color.light-theme(tokens.values());
+}
+@media (prefers-color-scheme: dark) {
+    :root, :host{
+        @include color.dark-theme(tokens.values());
+    }
+}
+.use-light-theme {
+    @include color.light-theme(tokens.values());
+}
+.use-dark-theme {
+    @include color.dark-theme(tokens.values());
+}
+body{
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+}

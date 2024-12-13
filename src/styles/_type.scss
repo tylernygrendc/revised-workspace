@@ -1,9 +1,22 @@
+@use "sass:map";
+@use "../../node_modules/@material/web/tokens/md-sys-typescale" as tokens;
+@use "../../node_modules/@material/web/typography/typescale" as typescale;
+
 @font-face {
-    font-family: "Roboto Flex";
+    font-family: "Roboto";
     src: url("../assets/roboto.woff2") format("woff2");
 }
 
+// md default typescale variables
 :root, :host{
-    --md-ref-typeface-brand: "Roboto Flex";
-    --md-ref-typeface-plain: "Roboto Flex";
+    @include typescale.theme(tokens.values());
+}
+// md customized typescale variables
+:root, :host {
+    --md-ref-typeface-brand: "Roboto";
+    --md-ref-typeface-plain: "Roboto";
+}
+
+body{
+    font-family: var(--md-ref-typeface-plain);
 }
