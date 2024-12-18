@@ -1187,9 +1187,66 @@ export class Snackbar extends Child {
         super();
     }
 }
-export class Tabs extends Child {
-    constructor(){
+export class Tab extends Child{
+    constructor(label = "", content=[]){
         super();
+        this.label = label;
+        this.content = content;
+    }
+    appendTo(){
+        // do nothing
+    }
+    setIcon(name = ""){
+        this.icon = name;
+        return this;
+    }
+}
+export class Tabs extends Child {
+    constructor(tablist = [], isPrimary = false, activeTab = 0){
+        super();
+        this.tablist = tablist;
+        this.attributes["active-tab-index"] = activeTab;
+        this.isPrimary = isPrimary;
+    }
+    appendTo(parent = getQueue()){
+        let tablist = new Child("md-tabs")
+            .setId(this.id)
+            .setAttribute(this.attributes)
+            .appendTo(parent).getNode(),
+            i = 0;
+        for(const t of this.tablist){
+            if(t instanceof Tab){
+                let panel = new Child()
+                    .setAttribute({
+                        "role": "tabpanel",
+                        "aria-labelledby": t.id
+                    }).setClassList(t.classList)
+                    .appendTo(parent).getNode();
+                let tab = new Child(this.isPrimary ? 'md-primary-tab':'md-secondary-tab')
+                    .setId(t.id)
+                    .setAttribute({"aria-controls": panel.id})
+                    .setInnerText(t.label)
+                    .appendTo(tablist).getNode();
+                    if(t.icon && !this.isPrimary) new Icon(t.icon).appendTo(tab);
+                if(i++ != this.attributes["active-tab-index"]) panel.hidden = true;
+                for(const item of t.content){
+                    if(item instanceof Child) item.appendTo(panel);
+                }
+                tab.addEventListener("click",function(){
+                    try{
+                        this.parentElement.querySelectorAll("md-primary-tab, md-secondary-tab").forEach(mdTab => {
+                                if(mdTab.id === this.id) document.getElementById(mdTab.getAttribute("aria-controls")).removeAttribute("hidden");
+                                else document.getElementById(mdTab.getAttribute("aria-controls")).setAttribute("hidden","true");
+                            });
+                    } catch (error) {
+                        console.groupCollapsed(`There was a problem changing tabs.`);
+                        console.error(error);
+                        console.groupEnd();
+                    }
+                });
+            }
+        }
+        return this;
     }
 }
 export class Timepicker extends Child {
