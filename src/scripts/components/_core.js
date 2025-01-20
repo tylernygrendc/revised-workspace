@@ -20,6 +20,8 @@ export class Child {
         this.id = getRandomId();
         this.innerText = "";
         this.listeners = [];
+        this.openShadow = true;
+        this.shadowList = [];
         this.tag = tag ? tag : "div";
     }
     #create(){
@@ -36,8 +38,13 @@ export class Child {
             let child = this.#create();
             if(parent instanceof Child) document.getElementById(parent.id).append(child);
             if(parent instanceof HTMLElement) parent.append(child);
+            if(parent instanceof ShadowRoot) parent.append(child)
             if(this.listeners.length > 0) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback);
             if(this.childList.length > 0) for(const descendant of this.childList) if(descendant instanceof Child) descendant.appendTo(child);
+            if(this.shadowList.length > 0) {
+                let shadowRoot = child.attachShadow({mode: this.openShadow ? "open" : "closed"});
+                for(const shadowChild of this.shadowList) if(shadowChild instanceof Child) shadowChild.appendTo(shadowRoot);
+            }
         } catch(error) {
             console.groupCollapsed("Could not append Child.");
             console.error(error);
@@ -73,16 +80,21 @@ export class Child {
         this.dataset = {...this.dataset, ...coerce.object(object,{[object]:""})};
         return this;
     }
-    setListener(event = "", callback = function(){}){
-        this.listeners.push({type: event, callback: callback});
-        return this;
-    }
     setId(string = ""){
         this.id = string;
         return this;
     }
     setInnerText(string = ""){
         this.innerText = string;
+        return this;
+    }
+    setListener(event = "", callback = function(){}){
+        this.listeners.push({type: event, callback: callback});
+        return this;
+    }
+    setShadowList(array = [], openShadow = true){
+        this.openShadow = openShadow;
+        this.shadowList.push(...coerce.array(array,[array]));
         return this;
     }
 }
