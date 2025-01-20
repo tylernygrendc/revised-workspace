@@ -5,22 +5,22 @@ import "@material/web/checkbox/checkbox.js";
 import "@material/web/radio/radio.js";
 import "@material/web/switch/switch.js";
 
-export class MDChecklist extends HTMLElement {
+class MDChecklist extends HTMLElement {
     constructor(){
         super();
     }
 }
-export class MDCheckitem extends HTMLElement{
+class MDCheckitem extends HTMLElement{
     constructor(){
         super();
     }
 }
-export class MDRadiolist extends HTMLElement {
+class MDRadiolist extends HTMLElement {
     constructor(){
         super();
     }
 }
-export class MDRadioitem extends HTMLElement{
+class MDRadioitem extends HTMLElement{
     constructor(){
         super();
     }
