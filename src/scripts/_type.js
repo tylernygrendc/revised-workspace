@@ -1,5 +1,5 @@
 export const coerce = {
-    array: (array, fallback = []) => {
+    array: (array, fallback = [array]) => {
         if(is.array(array)) return array;
         else return fallback;
     },
@@ -11,15 +11,15 @@ export const coerce = {
         if(is.function(f)) return f;
         else return fallback;
     },
-    number: (number, fallback = 0) => {
+    number: (number = 0, fallback = typeof Number(number) === "number" ? Number(number) : 0) => {
         if(is.number(number)) return number;
         else return fallback;
     },
-    object: (object, fallback = {}) => {
+    object: (object = {}, fallback = {}) => {
         if(is.object(object)) return object;
         else return fallback;
     },
-    string: (string, fallback = "") => {
+    string: (string = "", fallback = `${string}`) => {
         if(is.string(string)) return string;
         else return fallback;
     }
