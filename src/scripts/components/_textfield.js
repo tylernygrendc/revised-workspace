@@ -1,5 +1,7 @@
 import { camelCase } from "../_string.js";
+import "./_core.js";
 import { Child } from "./_core.js";
+import "./_iconbutton.js";
 import { Iconbutton } from "./_iconbutton.js";
 
 export class Textfield extends Child {

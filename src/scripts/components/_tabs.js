@@ -1,3 +1,4 @@
+import "./_core.js";
 import { Child, Icon } from "./_core.js";
 import "@material/web/tabs/tabs.js";
 import "@material/web/tabs/primary-tab.js";

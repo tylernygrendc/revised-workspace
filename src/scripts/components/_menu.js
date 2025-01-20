@@ -1,9 +1,9 @@
+import { coerce } from "../_type";
 import "./_core.js";
 import { Child, Icon } from "./_core.js";
 import "@material/web/menu/menu.js";
 import "@material/web/menu/menu-item.js";
 import "@material/web/menu/sub-menu.js";
-import { coerce } from "../_type";
 
 export class Mi extends Child {
     constructor(headline = "", options = {disabled:false, icon:""}){

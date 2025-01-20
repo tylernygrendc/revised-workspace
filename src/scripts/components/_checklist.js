@@ -1,4 +1,4 @@
-import { coerce } from "./_type.js";
+import { coerce } from "../_type.js";
 import "./core.js";
 import { Child, Divider } from "./_core.js";
 import "@material/web/checkbox/checkbox.js";

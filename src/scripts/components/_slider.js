@@ -1,4 +1,5 @@
-import { Child } from "./_basic";
+import "./_core.js";
+import { Child } from "./_core.js";
 import "@material/web/slider/slider.js";
 
 export class Slider extends Child {

@@ -1,4 +1,4 @@
-import { camelCase } from "./_string.js";
+import { camelCase } from "../_string.js";
 import { Child } from "./_core.js";
 import "@material/web/select/outlined-select.js";
 import "@material/web/select/select-option.js";
