@@ -20,8 +20,7 @@ export class Child {
         this.id = getRandomId();
         this.innerText = "";
         this.listeners = [];
-        this.openShadow = true;
-        this.shadowList = [];
+        this.shadowRoot = {isAttached: false};
         this.tag = tag ? tag : "div";
     }
     #create(){
@@ -41,9 +40,9 @@ export class Child {
             if(parent instanceof ShadowRoot) parent.append(child)
             if(this.listeners.length > 0) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback);
             if(this.childList.length > 0) for(const descendant of this.childList) if(descendant instanceof Child) descendant.appendTo(child);
-            if(this.shadowList.length > 0) {
-                let shadowRoot = child.attachShadow({mode: this.openShadow ? "open" : "closed"});
-                for(const shadowChild of this.shadowList) if(shadowChild instanceof Child) shadowChild.appendTo(shadowRoot);
+            if(this.shadowRoot.isAttached) {
+                let shadowRoot = child.attachShadow({mode: this.shadowRoot.mode, clonable: this.shadowRoot.clonable});
+                for(const descendant of this.shadowRoot.childList) if(descendant instanceof Child) descendant.appendTo(shadowRoot);
             }
         } catch(error) {
             console.groupCollapsed("Could not append Child.");
@@ -92,9 +91,13 @@ export class Child {
         this.listeners.push({type: event, callback: callback});
         return this;
     }
-    setShadowList(array = [], openShadow = true){
-        this.openShadow = openShadow;
-        this.shadowList.push(...coerce.array(array,[array]));
+    setShadowList(childArray = [], mode = "open", clonable = false){
+        this.shadowRoot = {
+            isAttached: true,
+            mode: mode,
+            clonable: clonable,
+            childList: coerce.array(childArray, [childArray])
+        }
         return this;
     }
 }
