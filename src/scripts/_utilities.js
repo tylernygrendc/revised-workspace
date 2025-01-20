@@ -1,3 +1,6 @@
+export function clearQueue(){
+    getQueue().innerHTML = "";
+}
 export function duplicateNode(node) {
     let clone;
     try{
@@ -29,8 +32,9 @@ export function getQueue(){
         queue = document.querySelector("#utility-queue");
         if(queue === null) {
             queue = document.createElement("div");
-            queue.setAttribute("id", "utility-queue");
-            queue.setAttribute("aria-hidden", "true");
+            queue.id = "utility-queue";
+            queue.style.display = "none";
+            queue["aria-hidden"] = "true";
             document.body.append(queue);
         }
     } catch (error) {
