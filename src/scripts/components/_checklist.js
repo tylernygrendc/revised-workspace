@@ -3,6 +3,7 @@ import "./core.js";
 import { Child, Divider } from "./_core.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/radio/radio.js";
+import "@material/web/switch/switch.js";
 
 export class MDChecklist extends HTMLElement {
     constructor(){
@@ -111,7 +112,6 @@ export class Radiolist extends Child{
 
     }
 }
-
 export class Switch extends Child {
     constructor(label = "", category = "", options = { checked: false, disabled: false }){
         super();
@@ -133,7 +133,6 @@ export class Switch extends Child {
         if(options.disabled) this.childList[1].setAttribute({disabled: true});
     }
 }
-
 export class Switchlist extends Child{
     constructor(category = "", itemsArray = [], useDividers = false){
         super();

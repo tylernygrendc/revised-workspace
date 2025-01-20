@@ -56,4 +56,8 @@ export class Textfield extends Child {
     getSelection(){
         return this.getNode({value:""}).value;
     }
+    setSupportingText(string = ""){
+        this.attributes["supporting-text"] = string;
+        return this;
+    }
 }

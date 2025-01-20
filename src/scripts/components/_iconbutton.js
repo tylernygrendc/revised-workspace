@@ -1,9 +1,9 @@
 import "./_core.js";
 import {Child, Icon} from "./_core.js";
-import "@material/web/iconbutton/_icon-button.js";
-import "@material/web/iconbutton/_filled-icon-button.js";
-import "@material/web/iconbutton/_outlined-icon-button.js";
-import "@material/web/iconbutton/_filled-tonal-icon-button.js";
+import "@material/web/iconbutton/icon-button.js";
+import "@material/web/iconbutton/filled-icon-button.js";
+import "@material/web/iconbutton/outlined-icon-button.js";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
 
 
 export class Iconbutton extends Child {
