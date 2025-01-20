@@ -4,12 +4,12 @@ import "@material/web/tabs/tabs.js";
 import "@material/web/tabs/primary-tab.js";
 import "@material/web/tabs/secondary-tab.js";
 
-export class MDTablet extends HTMLElement {
+class MDTablet extends HTMLElement {
     constructor(){
         super();
     }
 }
-export class MDTabPanel extends HTMLElement {
+class MDTabPanel extends HTMLElement {
     constructor(){
         super();
     }
