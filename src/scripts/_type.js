@@ -7,6 +7,10 @@ export const coerce = {
         if(is.boolean(boolean)) return boolean;
         else return fallback;
     },
+    function: (f, fallback = function(){}) => {
+        if(is.function(f)) return f;
+        else return fallback;
+    },
     number: (number, fallback = 0) => {
         if(is.number(number)) return number;
         else return fallback;
@@ -27,10 +31,6 @@ export const is = {
     },
     boolean: (thing) => {
         if(typeof thing === "boolean") return true;
-        else return false;
-    },
-    defined: (thing) => {
-        if(thing != null && thing != undefined) return true;
         else return false;
     },
     function: (thing) => {
@@ -65,10 +65,6 @@ export const not = {
     },
     boolean: (thing) => {
         if(typeof thing === "boolean") return false;
-        else return true;
-    },
-    defined: (thing) => {
-        if(thing != null && thing != undefined) return false;
         else return true;
     },
     function: (thing) => {
