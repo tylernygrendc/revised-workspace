@@ -119,7 +119,7 @@ An `mdc` folder also exists within `src/styles` and contains the styles for each
 
 ### Design System Symbols
 
-Material symbols are also kept separately, this time in `dist/assets`. You shouldn't need to touch the `dist` folder very often, only when updating `manifest.json` or adding static assets like images. To package only essential symbols, edit the `symbols` array within `updateSymbols.js` and run `node updateSymbols.js` from the command line.
+Material symbols are also kept separately, this time in `dist/assets`. You shouldn't need to touch the `dist` folder very often, only when updating `manifest.json` or adding static assets like images. To package only essential symbols, edit the `symbols` array within `symbols.config.js` and run `node symbols.config.js` from the command line.
 
 ## Development
 
