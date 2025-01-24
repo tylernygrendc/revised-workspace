@@ -57,7 +57,7 @@ As you can see, `Child` takes a single parameter that sets the tag name of the r
 }
 ```
 
-These values can be set directly (`new Child().classList = ["class-name"]`) or with an object method (`new Child().setClassList(["class-name"])`). Methods on the `Child` class are:
+These values can be set directly (`new Child().classList = ["class-name"]`) or with an object method (`new Child().setClassList(["class-name"])`). Modifying `Child` with its methods is preferred in most cases. Methods on the `Child` class are:
 
 |Method|Usage|Default|Returns|
 |---|---|---|---|
@@ -73,8 +73,6 @@ These values can be set directly (`new Child().classList = ["class-name"]`) or w
 |`setId(string)`|`.setId("demo")`|`getRandomId()`[^2]|`this`|
 |`setInnerText(string)`|`.setInnerText("demo")`|`""`|`this`|
 |`setShadowList(<Child>[]childArray,<string>mode,<boolean>clonable)`|`setShadowList([new Child()],"open")`|`{isAttached:true, mode:"open", clonable:false}`|`this`|
-
-Notice how most of these methods return `this`. Because of this, modifying `Child` with its methods is preferred in most cases. 
 
 ## Components
 
