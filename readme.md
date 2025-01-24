@@ -76,7 +76,7 @@ These values can be set directly (`new Child().classList = ["class-name"]`) or w
 
 ## Components
 
-The `Child` class is inherited by several higher-level components, meaning that all components in this system share the methods listed above. Some have additional methods that expand functionality and appearance. Here are the most common methods:
+The `Child` class is inherited by several higher-level components. These components are based on [material web](https://material-web.dev/) components (mdc) and more-or-less adhere to the [material design system](https://m3.material.io/). In addition to the methods on every `Child`, certain components have methods that expand functionality and appearance. Notably, these are independent of the methods that exist on DOM elements (although these still can be used). Here are the most common component methods:
 
 |Method|Returns|
 |---|---|
@@ -108,8 +108,6 @@ Several core components are included within `mdc/_core.js`. These are `Child`, `
 |`Slider`,`Range`|`mdc/_slider.js`|
 |`Tablet`,`Tabs`,`Tab`,`Panel`|`mdc/_tabs.js`|
 |`Textfield`|`mdc/_textfield.js`|
-
-As you can see, all of these exist inside of an `mdc` (material design components) folder. This is because they more-or-less adhere to the [material design system](https://m3.material.io/).
 
 ### Design System Styles
 
