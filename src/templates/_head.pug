@@ -25,4 +25,4 @@ html(lang="en")
 
         </script>
         block scripts
-            script(async src=`./scripts/${title}.js`)
+            script(async src=`./scripts/${title}.${ production ? "min.js" : "js"}`)

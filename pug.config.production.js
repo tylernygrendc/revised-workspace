@@ -17,7 +17,7 @@ for(const template of templates) {
         writeFileSync(`${outputDirectory}/${html}`, 
                 pug.renderFile(`${inputDirectory}/${template}`, {
                 title: template.split(".")[0],
-                production: false
+                production: true
             }));
         console.log(`${template} => ${html} (${existingHTML.includes(html) ? "updated" : "new"})`);
     }
