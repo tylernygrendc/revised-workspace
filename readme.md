@@ -1,6 +1,6 @@
 # Revised Workspace
 
-Building a chrome extension as a single, large javascript file is a bad way of doing things. This revised workspace compiles modular source content to a compiled output for distribution. It is for a **very** specific application, but I'm building it with reusability in mind. This project may prove useful in other web applications where the majority of computing must be done on-device.
+Building a chrome extension as a single, large javascript file is a bad way of doing things. This revised workspace compiles modular `src` content to a compiled `dist` output. It is for a **very** specific application, but I'm building it with reusability in mind. This project may prove useful in other web applications where the majority of computing occurs on-device.
 
 ## Getting Started
 
@@ -34,8 +34,8 @@ The `Child` class is the foundation of this system. Create an element like this:
 ```
 // index.js
 
-import "./components/_core.js";
-import {Child} from "./components/_core.js";
+import "./mdc/_core.js";
+import {Child} from "./mdc/_core.js";
 
 let exampleChild = new Child("h1")
     .setClassList(["child-example"])
@@ -53,6 +53,7 @@ As you can see, `Child` takes a single parameter that sets the tag name of the r
     this.id = getRandomId();
     this.innerText = "";
     this.listeners = [];
+    this.shadowRoot = {isAttached: false};
 }
 ```
 
@@ -71,6 +72,7 @@ These values can be set directly (`new Child().classList = ["class-name"]`) or w
 |`setListener(<string>event, function)`|`.setListener("click",()=>{console.log("click")})`|`""`,`function(){}`|`this`|
 |`setId(string)`|`.setId("demo")`|`getRandomId()`[^2]|`this`|
 |`setInnerText(string)`|`.setInnerText("demo")`|`""`|`this`|
+|`setShadowList(<Child>[]childArray,<string>mode,<boolean>clonable)`|`setShadowList([new Child()],"open")`|`{isAttached:true, mode:"open", clonable:false}`|`this`|
 
 Notice how most of these methods return `this`. Because of this, modifying `Child` with its methods is preferred in most cases. 
 
@@ -83,21 +85,65 @@ The `Child` class is inherited by several higher-level components, meaning that 
 |`getSelection()`|An array representing user input.|
 |`setLink(<string>href,<boolean>openInNewWindow)`|`this` object.|
 
-To use a component, you must import it. That import needs to look like this because of some [material web](https://material-web.dev/) funkiness:
+To use a component, you must import it. That import needs to look like this[^3] because of some [material web](https://material-web.dev/) funkiness:
 
 ```
 // index.js
-import "./components/_checklist";
-import { Checklist, Checkbox } from "./components/_checklist.js";
+import "./mdc/_checklist";
+import { Checklist, Checkbox } from "./mdc/_checklist.js";
 ```
 
-The second import statement here is technically unnecessary, but it allows for intellisense within the IDE. A future migration away from material web might allow for cleaner imports and smaller bundle sizes at compilation.
+Several core components are included within `mdc/_core.js`. These are `Child`, `Details`, `Divider`, `Form`, `Icon`, `Img`, `Link`, `Picture`, and `Progress`. Other available components are:
+
+|Component(s)|Location|
+|---|---|
+|`Button`|`mdc/_button.js`|
+|`Checklist`,`Checkbox`, `Radiolist`,`Radio`, `Switchlist`,`Switch`|`mdc/_checklist.js`|
+|`Chiplist`,`Chip`|`mdc/_chip.js`|
+|`Dialog`|`mdc/_dialog.js`|
+|`FAB` (floating action button)|`mdc/_fab.js`|
+|`Iconbutton`|`mdc/_iconbutton.js`|
+|`List`,`Li`|`mdc/_list.js`|
+|`Menu`,`Submenu`,`Mi`|`mdc/_menu.js`|
+|`Select`|`mdc/_menu.js`|
+|`Sheet`|`mdc/_sheet.js`|
+|`Slider`,`Range`|`mdc/_slider.js`|
+|`Tablet`,`Tabs`,`Tab`,`Panel`|`mdc/_tabs.js`|
+|`Textfield`|`mdc/_textfield.js`|
+
+As you can see, all of these exist inside of an `mdc` (material design components) folder. This is because they more-or-less adhere to the [material design system](https://m3.material.io/).
+
+### Design System Styles
+
+An `mdc` folder also exists within `src/styles` and contains the styles for each component.[^4] Notably, `theme.scss` and `typescale.scss` live outside of this folder because they are available at the `:root`/`:host` level. Create a custom theme using [material-web.dev](https://material-web.dev/).
+
+### Design System Symbols
+
+Material symbols are also kept separately, this time in `dist/assets`. You shouldn't need to touch the `dist` folder very often, only when updating `manifest.json` or adding static assets like images. To package only essential symbols, edit the `symbols` array within `updateSymbols.js` and run `node updateSymbols.js` from the command line.
+
+## Development
+
+Use `npm run compile` to generate `dist` content from the `src` directory. Alternatively, CSS, JavaScript, and HTML can complied independently, with or without the `--watch` flag:
+
+|Output|Command|With --watch (optional)|
+|---|---|---|
+|.js|`npm run rollup`|`npm run rollup -- -w`|
+|.css|`npm run sass`|`npm run sass -- -w`|
+|.html|`npm run pug`|n/a|
 
 ## Production
 
-Before exporting with `npm run compress`, add [terser](https://www.npmjs.com/package/@rollup/plugin-terser) to the list of plugins in `rollup.config.js`, and change the output file extension from `.js` to `.min.js`. Update `src/_head.pug` to reflect this change when it loads the corresponding script. 
+Before shipping your application:
 
-This is a process could be automated within `npm run compress`, maybe with the help a `.env` variable, but that's a problem for future me.
+[ ] Modify and run `node updateSymbols.js`.
+
+[ ] Update dependencies with `npm install`.
+
+[ ] Confirm that `dist/manifest.json` is up-to-date.
+
+Then use `npm run deploy` to generate production ready `dist` content from the `src` directory, and use `npm run compress` to compress the `dist` directory to `dist.zip`.
 
 [^1]: `getQueue()` references (or creates) a node containing elements that have not yet been moved to their final position. This isn't absolutely necessary, but helps to prevent layout shift.
 [^2]: `getRandomId()` returns a random string suitable for uniquely identifying an html element. It's just a container for `crypto.getRandomValues()`.
+[^3]: The second import statement allows for intellisense within the IDE. It's technically unnecessary, but it is helpful.
+[^4]: Only *some* components-- core material web styles (from Google) exist within `node_modules/@material/web/*`.
