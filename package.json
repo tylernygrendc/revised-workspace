@@ -7,8 +7,8 @@
   },
   "scripts": {
     "compile": "node pug.config.js && sass --no-source-map src/styles:dist/styles && rollup --config rollup.config.js",
-    "publish": "node pug.config.production.js && npm run sass && rollup --config rollup.config.production.js",
-    "compress": "npm run publish && zip ./dist/* && mkdir compressed && mv ./dist/*.zip ./dist.zip",
+    "deploy": "node pug.config.production.js && npm run sass && rollup --config rollup.config.production.js",
+    "compress": "zip ./dist/* && mkdir compressed && mv ./dist/*.zip ./dist.zip",
     "pug": "node pug.config.js",
     "rollup": "rollup --config rollup.config.js",
     "sass": "sass --no-source-map src/styles:dist/styles src/styles/mdc:src/styles/mdc",
