@@ -131,11 +131,11 @@ Use `npm run compile` to generate `dist` content from the `src` directory. Alter
 
 Before shipping your application:
 
-[ ] Modify and run `node updateSymbols.js`.
+- [ ] Modify and run `node symbols.config.js`.
 
-[ ] Update dependencies with `npm install`.
+- [ ] Update dependencies with `npm install`.
 
-[ ] Confirm that `dist/manifest.json` is up-to-date.
+- [ ] Confirm that `dist/manifest.json` is up-to-date.
 
 Then use `npm run deploy` to generate production ready `dist` content from the `src` directory, and use `npm run compress` to compress the `dist` directory to `dist.zip`.
 
