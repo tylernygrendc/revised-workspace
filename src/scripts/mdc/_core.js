@@ -33,13 +33,15 @@ export class Child {
         this.innerText = "";
         this.listeners = [];
         this.shadowRoot = {isAttached: false};
+        this.styles = {};
         this.tag = tag ? tag : "div";
     }
     #create(){
         let child = document.createElement(this.tag);
             child.setAttribute("id", this.id);
-            for(const [key, val] of Object.entries(this.attributes)) child.setAttribute(key, val);
             for(const string of this.classList) child.classList.add(string);
+            for(const [key, val] of Object.entries(this.attributes)) child[key] = val;
+            for(const [key, val] of Object.entries(this.styles)) child.style[key] = val;
             for(const [key, val] of Object.entries(this.dataset)) child.dataset[key] = val;
             if(this.innerText) child.appendChild(document.createTextNode(this.innerText));
             return child;
@@ -72,7 +74,7 @@ export class Child {
         return node instanceof HTMLElement ? node : fallback;
     }
     setAttribute(object = {}){
-        this.attributes = {...this.attributes, ...coerce.object(object,{[object]:""})};
+        this.attributes = {...this.attributes, ...coerce.object(object)};
         return this;
     }
     setAriaLabel(ariaLabel = ""){
@@ -80,15 +82,15 @@ export class Child {
         return this;
     }
     setChildList(array = []){
-        this.childList.push(...coerce.array(array,[array]));
+        this.childList.push(...coerce.array(array));
         return this;
     }
     setClassList(array = []){
-        this.classList.push(...coerce.array(array,[array]));
+        this.classList.push(...coerce.array(array));
         return this;
     }
     setDataset(object = {}){
-        this.dataset = {...this.dataset, ...coerce.object(object,{[object]:""})};
+        this.dataset = {...this.dataset, ...coerce.object(object)};
         return this;
     }
     setId(string = ""){
@@ -108,8 +110,12 @@ export class Child {
             isAttached: true,
             mode: mode,
             clonable: clonable,
-            childList: coerce.array(childArray, [childArray])
+            childList: coerce.array(childArray)
         }
+        return this;
+    }
+    setStyle(object = {}){
+        this.styles = {...this.styles, ...coerce.object(object)};
         return this;
     }
 }
@@ -139,7 +145,7 @@ export class Form extends Child {
     constructor(itemsArray=[]){
         super();
         this.tag = "form";
-        this.childList = coerce.array(itemsArray, [itemsArray]);
+        this.childList = coerce.array(itemsArray);
     }
     getSelection(){
         return this.childList.reduce((acc, cv) => {
