@@ -3,7 +3,7 @@ export const coerce = {
         if(is.array(array)) return array;
         else return fallback;
     },
-    boolean: (boolean, fallback = false) => {
+    boolean: (boolean, fallback = typeof Boolean(boolean) === "boolean" ? Boolean(boolean) : false) => {
         if(is.boolean(boolean)) return boolean;
         else return fallback;
     },
@@ -15,7 +15,7 @@ export const coerce = {
         if(is.number(number)) return number;
         else return fallback;
     },
-    object: (object = {}, fallback = {}) => {
+    object: (object = {}, fallback = object.split(":").length === 2 ? { [object.split(":")[0]] : object.split(":")[1]} : {[object]:""}) => {
         if(is.object(object)) return object;
         else return fallback;
     },
@@ -94,7 +94,5 @@ export const not = {
 }
 
 export default function getType(thing) {
-    for(const [key, f] of Object.entries(is)) {
-        if(f(thing) && !["defined"].includes(key)) return key;
-    }
+    for(const [key, f] of Object.entries(is)) if(f(thing)) return key;
 }
