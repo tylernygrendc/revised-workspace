@@ -38,13 +38,13 @@ export class Child {
     }
     #create(){
         let child = document.createElement(this.tag);
-            child.setAttribute("id", this.id);
-            for(const string of this.classList) child.classList.add(string);
-            for(const [key, val] of Object.entries(this.attributes)) child[key] = val;
-            for(const [key, val] of Object.entries(this.styles)) child.style[key] = val;
-            for(const [key, val] of Object.entries(this.dataset)) child.dataset[key] = val;
-            if(this.innerText) child.appendChild(document.createTextNode(this.innerText));
-            return child;
+            child.id = this.id;
+        for(const string of this.classList) child.classList.add(string);
+        for(const [key, val] of Object.entries(this.attributes)) child[key] = val;
+        for(const [key, val] of Object.entries(this.styles)) child.style[key] = val;
+        for(const [key, val] of Object.entries(this.dataset)) child.dataset[key] = val;
+        if(this.innerText) child.appendChild(document.createTextNode(this.innerText));
+        return child;
     }
     appendTo(parent = getQueue()){
         try{
@@ -52,8 +52,8 @@ export class Child {
             if(parent instanceof Child) document.getElementById(parent.id).append(child);
             if(parent instanceof HTMLElement) parent.append(child);
             if(parent instanceof ShadowRoot) parent.append(child)
-            if(this.listeners.length > 0) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback);
-            if(this.childList.length > 0) for(const descendant of this.childList) if(descendant instanceof Child) descendant.appendTo(child);
+            if(this.listeners.length) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback);
+            if(this.childList.length) for(const descendant of this.childList) if(descendant instanceof Child) descendant.appendTo(child);
             if(this.shadowRoot.isAttached) {
                 let shadowRoot = child.attachShadow({mode: this.shadowRoot.mode, clonable: this.shadowRoot.clonable});
                 for(const descendant of this.shadowRoot.childList) if(descendant instanceof Child) descendant.appendTo(shadowRoot);
