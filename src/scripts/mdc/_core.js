@@ -52,7 +52,7 @@ export class Child {
             if(parent instanceof Child) document.getElementById(parent.id).append(child);
             if(parent instanceof HTMLElement) parent.append(child);
             if(parent instanceof ShadowRoot) parent.append(child)
-            if(this.listeners.length) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback);
+            if(this.listeners.length) for(const listener of this.listeners) child.addEventListener(listener.type, listener.callback, listener.options);
             if(this.childList.length) for(const descendant of this.childList) if(descendant instanceof Child) descendant.appendTo(child);
             if(this.shadowRoot.isAttached) {
                 let shadowRoot = child.attachShadow({mode: this.shadowRoot.mode, clonable: this.shadowRoot.clonable});
@@ -89,7 +89,7 @@ export class Child {
         this.classList.push(...coerce.array(array));
         return this;
     }
-    setDataset(object = {}){
+    setData(object = {}){
         this.dataset = {...this.dataset, ...coerce.object(object)};
         return this;
     }
@@ -101,8 +101,14 @@ export class Child {
         this.innerText = string;
         return this;
     }
-    setListener(event = "", callback = function(){}){
-        this.listeners.push({type: event, callback: callback});
+    setListener(event = "", callback = function(){}, options = {capture: false, once: false, passive: false, signal: null}){
+        let object = {
+            capture: typeof options.capture === "boolean" ? options.capture : false,
+            once: typeof options.once === "boolean" ? options.once : false,
+            passive: typeof options.passive === "boolean" ? options.passive : false
+        };
+        if(options.signal instanceof AbortSignal) Object.assign(object, options.signal);
+        this.listeners.push({type: event, callback: callback, options: object});
         return this;
     }
     setShadowList(childArray = [], mode = "open", clonable = false){
