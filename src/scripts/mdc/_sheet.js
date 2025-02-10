@@ -72,40 +72,41 @@ class MDSheet extends HTMLElement{
     }
     async removeContent(){
         try{
-
+            // get sheet content container
+            let sheetContent = this.querySelector(".sheet-content");
+            // fade out container
+            let animation = sheetContent.animate([
+                {opacity: 1},
+                {opacity: 0}
+            ], {
+                duration: motion.duration.short,
+                easing: motion.easing.decelerate,
+                iterations: 1,
+                fill: "forwards"
+            });
+            await animation.finished;
+            animation.commitStyles();
+            animation.cancel();
+            // remove content
+            sheetContent.innerHTML = "";
+            // resize sheet
+            animation = this.animate([
+                {width: `${this.clientWidth}px`},
+                {width: `${sheetContent.scrollWidth}px`}
+            ],{
+                duration: motion.duration.short,
+                easing: motion.easing.decelerate,
+                iterations: 1,
+                fill: "forwards"
+            });
+            await animation.finished;
+            animation.commitStyles();
+            animation.cancel();
         } catch (error) {
-
+            console.groupCollapsed("Could not remove content from <md-sheet>.");
+            console.consoleError(error);
+            console.groupEnd();
         }
-        // get sheet content container
-        let sheetContent = this.querySelector(".sheet-content");
-        // fade opacity
-        let animation = sheetContent.animate([
-            {opacity: 1},
-            {opacity: 0}
-        ], {
-            duration: motion.duration.short,
-            easing: motion.easing.decelerate,
-            iterations: 1,
-            fill: "forwards"
-        });
-        await animation.finished;
-        animation.commitStyles();
-        animation.cancel();
-        // remove content
-        sheetContent.innerHTML = "";
-        // resize sheet
-        animation = this.animate([
-            {width: `${this.clientWidth}px`},
-            {width: `${sheetContent.scrollWidth}px`}
-        ],{
-            duration: motion.duration.short,
-            easing: motion.easing.decelerate,
-            iterations: 1,
-            fill: "forwards"
-        });
-        await animation.finished;
-        animation.commitStyles();
-        animation.cancel();
     }
     replaceContent(contentArray = []){
         this.removeContent();
