@@ -32,8 +32,14 @@ export class Child {
         this.id = getRandomId();
         this.innerText = "";
         this.listeners = [];
-        this.shadowRoot = {isAttached: false};
+        this.shadowRoot = {
+            isAttached: false,
+            // mode: "open",
+            // clonable: false,
+            // childList: []
+        };
         this.styles = {};
+        this.computedStyles = {};
         this.tag = tag ? tag : "div";
     }
     #create(){
@@ -42,6 +48,7 @@ export class Child {
         for(const string of this.classList) child.classList.add(string);
         for(const [key, val] of Object.entries(this.attributes)) child[key] = val;
         for(const [key, val] of Object.entries(this.styles)) child.style[key] = val;
+        for(const [key, val] of Object.entries(this.computedStyles)) window.getComputedStyle(child).setProperty(key, val);
         for(const [key, val] of Object.entries(this.dataset)) child.dataset[key] = val;
         if(this.innerText) child.appendChild(document.createTextNode(this.innerText));
         return child;
@@ -120,8 +127,9 @@ export class Child {
         }
         return this;
     }
-    setStyle(object = {}){
-        this.styles = {...this.styles, ...coerce.object(object)};
+    setStyle(object = {}, inline = false){
+        if(inline) this.styles = {...this.styles, ...coerce.object(object)};
+        else this.computedStyles = {...this.computedStyles, ...coerce.object(object)};
         return this;
     }
 }
