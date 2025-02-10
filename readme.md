@@ -73,6 +73,7 @@ These values can be set directly (`new Child().classList = ["class-name"]`) or w
 |`setId(string)`|`.setId("demo")`|`getRandomId()`[^2]|`this`|
 |`setInnerText(string)`|`.setInnerText("demo")`|`""`|`this`|
 |`setShadowList(<Child>[]childArray,<string>mode,<boolean>clonable)`|`setShadowList([new Child()],"open")`|`{isAttached:true, mode:"open", clonable:false}`|`this`|
+|`setStyle(object,<boolean>inline)`|`setStyle({translate:"-10%"},true)`|`{},false`|`this`|
 
 ## Components
 
