@@ -1,6 +1,7 @@
 export const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 export const monthNames = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 
+export const today = new Date();
 export const endOfToday = new Date(new Date().setHours(23,59,59));
 export const startOfToday = new Date(new Date().setHours(0,0,0));
 export const presentYearEnd = new Date(new Date().getFullYear(),11,31,23,59,59);
@@ -82,4 +83,28 @@ export const stringify = {
         if(abbreviated && !(leadingDay)) return `${month.substring(0,3)} ${dd}, ${year}`;
         if(!(abbreviated) && !(leadingDay)) return `${month} ${dd}, ${year}`;
     }
+}
+
+export function daysIn(month = new Date(), year) {
+    if(month instanceof Date){
+        month = month.getMonth();
+        year = month.getFullYear();
+    } else {
+        month = typeof month === "number" ? month : new Date().getMonth();
+        year = typeof year === "number" ? year : new Date().getFullYear();
+    }
+    return [
+        31, // January
+        !(year % 400) || (!(year % 4) && year % 100) ? 29 : 28, // February
+        31, // March
+        30, // April
+        31, // May
+        30, // June
+        31, // July
+        31, // August
+        30, // September
+        31, // October
+        30, // November
+        31  // December
+      ][month];
 }
