@@ -1,10 +1,12 @@
 import "./_core.js";
-import { motion, Child, breakpoints, Divider } from "./_core.js";
-import { Iconbutton } from "./_iconbutton.js";
+import { breakpoints, motion, Child, Divider, Iconbutton } from "./_core.js";
 
 class MDSheet extends HTMLElement{
     constructor(){
         super();
+        this.animation = {
+            slide: slide
+        }
     }
     async addContent(contentArray = []){
         try{
@@ -65,10 +67,7 @@ class MDSheet extends HTMLElement{
         }
     }
     connectedCallback(){
-        slide();
-    }
-    disconnectedCallback(){
-        
+        this.animation.slide();
     }
     async removeContent(){
         try{
@@ -127,9 +126,9 @@ export class Sheet extends Child {
                 .setClassList("sheet-headline")
                 .setInnerText(headline),
             new Iconbutton("close")
-                .setAriaLabel("close")
+                .setAriaLabel("close sheet")
                 .setClassList("sheet-close")
-                .setListener("click", slide),
+                .setListener("click", slide, {once: true}),
             new Child()
                 .setClassList(["sheet-content"])
                 .setChildList(contentArray)
