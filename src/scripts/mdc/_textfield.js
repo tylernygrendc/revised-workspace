@@ -1,17 +1,15 @@
 import { camelCase } from "../_string.js";
 import "./_core.js";
-import { Child } from "./_core.js";
-import "./_iconbutton.js";
-import { Iconbutton } from "./_iconbutton.js";
+import { Child, Iconbutton } from "./_core.js";
 
 export class Textfield extends Child {
-    constructor(label = "", placeholder = "", type = "", options = {autocomplete: "", disabled: false, max: 0, min: 0, pattern: "", prefix: "", readOnly: false,required: false, rows: 0, step: 0, suffix: ""}){
+    constructor(label = "", type = "", options = {autocomplete: "", disabled: false, max: 0, min: 0, pattern: "", placeholder: "", prefix: "", readOnly: false, required: false, rows: 0, step: 0, suffix: "", supportingText: ""}){
         super();
         this.tag = "md-outlined-text-field";
         this.attributes.label = label;
         this.attributes.name = camelCase(label);
         this.attributes.type = ["date", "email", "number", "password", "tel", "text", "textarea", "search", "url"].includes(type) ? type : "text";
-        if(placeholder) this.attributes.placeholder = String(placeholder);
+        if(options.placeholder) this.attributes.placeholder = String(options.placeholder);
         if(options.autocomplete) this.attributes.autocomplete = String(autocomplete);
         if(options.disabled) this.attributes.disabled = true;
         if(options.max){
@@ -29,6 +27,7 @@ export class Textfield extends Child {
         if(options.rows && this.attributes.type === "textarea") this.attributes.rows = String(options.rows);
         if(options.step && this.attributes.type === "number") String(options.step);
         if(options.suffix) this.attributes["suffix-text"] = String(options.suffix);
+        if(options.supportingText) this.attributes["supporting-text"] = String(options.supportingText);
         switch(this.attributes.type){
             case "date":
                 this.childList.push(
@@ -55,9 +54,5 @@ export class Textfield extends Child {
     }
     getSelection(){
         return this.getNode({value:""}).value;
-    }
-    setSupportingText(string = ""){
-        this.attributes["supporting-text"] = string;
-        return this;
     }
 }
