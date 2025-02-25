@@ -2,6 +2,8 @@
 
 Building a chrome extension as a single, large javascript file is a bad way of doing things. This revised workspace compiles modular `src` content to a compiled `dist` output. It is for a **very** specific application, but I'm building it with reusability in mind. This project may prove useful in other web applications where the majority of computing occurs on-device.
 
+Please note: I am now using this revised workspace to build a project. I will be stopping direct work on this repository for now, but will copy over changes and new features as they come.
+
 ## Getting Started
 
 Download the [latest release](https://github.com/tylernygrendc/revised-workspace.git/releases/tag/v0.10`) or clone this repository with:
@@ -81,10 +83,10 @@ The `Child` class is inherited by several higher-level components. These compone
 
 |Method|Returns|
 |---|---|
-|`getSelection()`|An array representing user input.|
+|`getSelection()`|An array representing user input.[^3]|
 |`setLink(<string>href,<boolean>openInNewWindow)`|`this` object.|
 
-To use a component, you must import it. That import needs to look like this[^3] because of some [material web](https://material-web.dev/) funkiness:
+To use a component, you must import it. That import needs to look like this[^4] because of some [material web](https://material-web.dev/) funkiness:
 
 ```
 // index.js
@@ -92,7 +94,7 @@ import "./mdc/_checklist";
 import { Checklist, Checkbox } from "./mdc/_checklist.js";
 ```
 
-Several core components are included within `mdc/_core.js`. These are `Child`, `Details`, `Divider`, `Form`, `Icon`, `Img`, `Link`, `Picture`, and `Progress`. Other available components are:
+Several core components are included within `mdc/_core.js`. These are `Child`, `Details`, `Divider`, `Form`, `Icon`, `Iconbutton`, `Img`, `Link`, `Picture`, and `Progress`. Other available components are:
 
 |Component(s)|Location|
 |---|---|
@@ -101,7 +103,6 @@ Several core components are included within `mdc/_core.js`. These are `Child`, `
 |`Chiplist`,`Chip`|`mdc/_chip.js`|
 |`Dialog`|`mdc/_dialog.js`|
 |`FAB` (floating action button)|`mdc/_fab.js`|
-|`Iconbutton`|`mdc/_iconbutton.js`|
 |`List`,`Li`|`mdc/_list.js`|
 |`Menu`,`Submenu`,`Mi`|`mdc/_menu.js`|
 |`Select`|`mdc/_menu.js`|
@@ -112,7 +113,7 @@ Several core components are included within `mdc/_core.js`. These are `Child`, `
 
 ### Design System Styles
 
-An `mdc` folder also exists within `src/styles` and contains the styles for each component.[^4] Notably, `theme.scss` and `typescale.scss` live outside of this folder because they are available at the `:root`/`:host` level. Create a custom theme using [material-web.dev](https://material-web.dev/).
+An `mdc` folder also exists within `src/styles` and contains the styles for each component.[^5] Notably, `theme.scss` and `typescale.scss` live outside of this folder because they are available at the `:root`/`:host` level. Create a custom theme using [material-web.dev](https://material-web.dev/).
 
 ### Design System Symbols
 
@@ -142,5 +143,6 @@ Then use `npm run deploy` to generate production ready `dist` content from the `
 
 [^1]: `getQueue()` references (or creates) a node containing elements that have not yet been moved to their final position. This isn't absolutely necessary, but helps to prevent layout shift.
 [^2]: `getRandomId()` returns a random string suitable for uniquely identifying an html element. It's just a container for `crypto.getRandomValues()`.
-[^3]: The second import statement allows for intellisense within the IDE. It's technically unnecessary, but it is helpful.
-[^4]: Only *some* components-- core material web styles (from Google) exist within `node_modules/@material/web/*`.
+[^3]: This method is not yet implemented.
+[^4]: The second import statement allows for intellisense within the IDE. It's technically unnecessary, but it is helpful.
+[^5]: Only *some* components-- core material web styles (from Google) exist within `node_modules/@material/web/*`.
