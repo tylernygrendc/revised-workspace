@@ -1,9 +1,9 @@
 export const coerce = {
-    array: (array, fallback = [array]) => {
+    array: (array, fallback = []) => {
         if(is.array(array)) return array;
         else return fallback;
     },
-    boolean: (boolean, fallback = typeof Boolean(boolean) === "boolean" ? Boolean(boolean) : false) => {
+    boolean: (boolean, fallback = false) => {
         if(is.boolean(boolean)) return boolean;
         else return fallback;
     },
@@ -11,15 +11,15 @@ export const coerce = {
         if(is.function(f)) return f;
         else return fallback;
     },
-    number: (number = 0, fallback = typeof Number(number) === "number" ? Number(number) : 0) => {
+    number: (number = 0, fallback = 0) => {
         if(is.number(number)) return number;
         else return fallback;
     },
-    object: (object = {}, fallback = object.split(":").length === 2 ? { [object.split(":")[0]] : object.split(":")[1]} : {[object]:""}) => {
+    object: (object = {}, fallback = {}) => {
         if(is.object(object)) return object;
         else return fallback;
     },
-    string: (string = "", fallback = `${string}`) => {
+    string: (string = "", fallback = "") => {
         if(is.string(string)) return string;
         else return fallback;
     }
